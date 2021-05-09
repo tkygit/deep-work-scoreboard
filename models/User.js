@@ -33,7 +33,7 @@ userSchema.methods.generateJWT = function () {
 userSchema.statics.upsertGoogleUser = async function ({ accessToken, refreshToken, profile }) {
     const User = this;
 
-    const user = await User.findOne({ 'social.googleProvider.id': profile.id });
+    const user = await User.findOne({ 'googleProvider.id': profile.id });
 
     // no user was found, lets create a new one
     if (!user) {
@@ -45,7 +45,9 @@ userSchema.statics.upsertGoogleUser = async function ({ accessToken, refreshToke
             },
             createdAt: new Date().toISOString(),
             firstName: profile.name.givenName,
-            lastName: profile.name.familyName
+            lastName: profile.name.familyName,
+            totalDwMins: 0,
+            nextMilestoneHr: 10,
         });
 
         return newUser;

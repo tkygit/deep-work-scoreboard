@@ -20,7 +20,8 @@ module.exports = {
 
                     if (user) {
                         return ({
-                            name: user.firstName,
+                            ...user._doc,
+                            id: user.id,
                             token: user.generateJWT(),
                         });
                     }

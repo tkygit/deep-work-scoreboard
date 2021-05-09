@@ -10,11 +10,7 @@ type User {
     totalDwMins: Int!
     nextMilestoneHr: Int!
     createdAt: String!
-}
-
-type AuthResponse {
     token: String
-    name: String
 }
 
 input AuthInput {
@@ -26,6 +22,6 @@ type Query {
 }
 
 type Mutation {
-    authGoogle(input: AuthInput!): AuthResponse
+    authGoogle(input: AuthInput!): User!
 }
 `
