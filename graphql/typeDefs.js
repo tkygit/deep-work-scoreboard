@@ -18,24 +18,28 @@ input AuthInput {
 }
 
 type Project {
+    id: ID!
     name: String!
     user: User!
     createdAt: String!
 }
 
 type ProjectType {
+    id: ID!
     name: String!
     user: User!
     createdAt: String!
 }
 
 type Location {
+    id: ID!
     name: String!
     user: User!
     createdAt: String!
 }
 
 type Session {
+    id: ID!
     project: Project!
     project_type: ProjectType!
     location: Location!
@@ -54,6 +58,6 @@ type Mutation {
     createProject(name: String!): Project!
     createProjectType(name: String!): ProjectType!
     createLocation(name: String!): Location!
-    createSession(project: Project! , project_type: ProjectType!, location: Location!, timeGoal: Int!): Session!
+    createSession(project: ID! , project_type: ID!, location: ID!, time_goal: Int!): Session!
 }
 `

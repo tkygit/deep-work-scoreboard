@@ -1,6 +1,6 @@
 const { model, Schema } = require('mongoose');
 
-const projectMilestoneSchema = new Schema({
+const sessionSchema = new Schema({
     project: {
         type: Schema.Types.ObjectId,
         ref: 'projects'
@@ -13,7 +13,7 @@ const projectMilestoneSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'location'   
     },
-    timeGoal: Integer,
+    time_goal: Number,
     user: {
         type: Schema.Types.ObjectId,
         ref: 'users'
@@ -22,4 +22,4 @@ const projectMilestoneSchema = new Schema({
     completedAt: String
 });
 
-module.exports = model ('ProjectMilestone', projectMilestoneSchema);
+module.exports = model ('Session', sessionSchema);
