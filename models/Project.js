@@ -7,6 +7,7 @@ const projectSchema = new Schema({
         ref: 'users'
     },
     createdAt: String,
+    totalProjectTime: Number
 });
 
 module.exports = model ('Project', projectSchema);

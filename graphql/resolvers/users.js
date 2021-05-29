@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const { authenticateGoogle } = require('../../util/passport');
 
 const User = require('../../models/User');
+const checkAuth = require('../../util/check-auth');
 
 module.exports = {
     Mutation: {
@@ -39,6 +40,26 @@ module.exports = {
                 return (Error('Server error'));
             } catch (error) {
                 return error;
+            }
+        },
+        async addDwTime(_, { user, seconds }, context) {
+            checkAuth(context);
+
+            const foundUser = await User.findOne({ '_id': user });
+
+            if (foundUser) {
+                try {
+                    const updated = await User.updateOne(
+                        { _id: user },
+                        { $set: { "totalDwSeconds" : foundUser.totalDwSeconds + seconds } }
+                    );
+
+                    return user;
+                } catch (e) {
+                    throw new Error("Unable to update user: " + e);
+                }
+            } else {
+                throw new Error("Unable to find user to update");
             }
         },
     }

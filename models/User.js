@@ -12,7 +12,7 @@ const userSchema = new Schema({
     createdAt: String,
     firstName: String,
     lastName: String,
-    totalDwMins: Number,
+    totalDwSeconds: Number,
     nextMilestoneHr: Number,
     projectMilestones: [
         {
@@ -46,7 +46,7 @@ userSchema.statics.upsertGoogleUser = async function ({ accessToken, refreshToke
             createdAt: new Date().toISOString(),
             firstName: profile.name.givenName,
             lastName: profile.name.familyName,
-            totalDwMins: 0,
+            totalDwSeconds: 0,
             nextMilestoneHr: 10,
         });
 

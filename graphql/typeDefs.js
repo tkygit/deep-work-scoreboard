@@ -7,7 +7,7 @@ type User {
     googleId: String!
     firstName: String!
     lastName: String!
-    totalDwMins: Int!
+    totalDwSeconds: Int!
     nextMilestoneHr: Int!
     createdAt: String!
     token: String
@@ -22,6 +22,7 @@ type Project {
     name: String!
     user: User!
     createdAt: String!
+    totalProjectTime: Int!
 }
 
 type ProjectType {
@@ -60,5 +61,7 @@ type Mutation {
     createLocation(name: String!): Location!
     createSession(project: ID! , project_type: ID!, location: ID!, time_goal: Int!): Session!
     editTotalTime(session: ID!, seconds: Int!): ID!
+    addProjectTime(project: ID!, seconds: Int!): ID!
+    addDwTime(user: ID!, seconds: Int!): ID!
 }
 `

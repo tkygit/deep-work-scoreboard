@@ -22,14 +22,14 @@ module.exports = {
             return session;
         },
         async editTotalTime(_, { session, seconds }, context) {
-            const user = checkAuth(context);
+            checkAuth(context);
 
             try {
-                const updated = await Session.updateOne(
+                await Session.updateOne(
                     { _id: session },
                     { $set: { "timeSeconds" : seconds } }
                 );
-                console.log(updated);
+
                 return session;
             } catch (e) {
                 throw new Error("Unable to update session: " + e);

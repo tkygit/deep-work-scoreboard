@@ -18,7 +18,8 @@ module.exports = {
                 const newProject = new Project({
                     name,
                     user: user.id,
-                    createdAt: new Date().toISOString()
+                    createdAt: new Date().toISOString(),
+                    totalProjectTime: 0
                 });
     
                 const project = await newProject.save();
@@ -27,6 +28,26 @@ module.exports = {
             } else {
                 return foundProject;
             }
-        }
+        },
+        async addProjectTime(_, { project, seconds }, context) {
+            checkAuth(context);
+
+            const foundProject = await Project.findOne({ '_id': project });
+
+            if (foundProject) {
+                try {
+                    await Project.updateOne(
+                        { _id: project },
+                        { $set: { "totalProjectTime" : foundProject.totalProjectTime + seconds } }
+                    );
+    
+                    return project;
+                } catch (e) {
+                    throw new Error("Unable to update project: " + e);
+                }
+            } else {
+                throw new Error("Unable to find project to update");
+            }
+        },
     }
 };
