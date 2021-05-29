@@ -20,6 +20,20 @@ module.exports = {
             const session = await newSession.save();
 
             return session;
-        }
+        },
+        async editCompletedTime(_, { session }, context) {
+            const user = checkAuth(context);
+
+            try {
+                await Session.updateOne(
+                    { _id: session },
+                    { $set: { "completedAt" : new Date().toISOString() } }
+                );
+
+                return session;
+            } catch (e) {
+                throw new Error("Unable to update session: " + e);
+            }
+        },
     }
 };
