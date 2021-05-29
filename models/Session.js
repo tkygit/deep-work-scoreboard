@@ -19,7 +19,7 @@ const sessionSchema = new Schema({
         ref: 'users'
     },
     createdAt: String,
-    completedAt: String
+    timeSeconds: Number
 });
 
 module.exports = model ('Session', sessionSchema);

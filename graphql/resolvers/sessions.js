@@ -21,15 +21,15 @@ module.exports = {
 
             return session;
         },
-        async editCompletedTime(_, { session }, context) {
+        async editTotalTime(_, { session, seconds }, context) {
             const user = checkAuth(context);
 
             try {
-                await Session.updateOne(
+                const updated = await Session.updateOne(
                     { _id: session },
-                    { $set: { "completedAt" : new Date().toISOString() } }
+                    { $set: { "timeSeconds" : seconds } }
                 );
-
+                console.log(updated);
                 return session;
             } catch (e) {
                 throw new Error("Unable to update session: " + e);
