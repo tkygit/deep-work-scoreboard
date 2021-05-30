@@ -47,7 +47,9 @@ type Session {
     timeGoal: Int
     user: User!
     createdAt: String!
+    completedAt: String!
     timeSeconds: Int
+    endTally: Int
 }
 
 type Query {

@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 
 const Session = require('../../models/Session');
+const User = require('../../models/User');
 const checkAuth = require('../../util/check-auth');
 
 module.exports = {
@@ -22,12 +23,17 @@ module.exports = {
             return session;
         },
         async editSessionTime(_, { session, seconds }, context) {
-            checkAuth(context);
+            const user = checkAuth(context);
+            const currUser = await User.findOne({ '_id': user.id });
 
             try {
                 await Session.updateOne(
                     { _id: session },
-                    { $set: { "timeSeconds" : seconds } }
+                    { $set: {
+                        "completedAt": new Date().toISOString(),
+                        "timeSeconds": seconds,
+                        "endTally": currUser.totalDwSeconds + seconds
+                    }}
                 );
 
                 return seconds;
