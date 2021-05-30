@@ -36,12 +36,13 @@ module.exports = {
 
             if (foundProject) {
                 try {
+                    const updatedProjectTime = foundProject.totalProjectTime + seconds;
                     await Project.updateOne(
                         { _id: project },
-                        { $set: { "totalProjectTime" : foundProject.totalProjectTime + seconds } }
+                        { $set: {"totalProjectTime" : updatedProjectTime} }
                     );
     
-                    return project;
+                    return updatedProjectTime;
                 } catch (e) {
                     throw new Error("Unable to update project: " + e);
                 }

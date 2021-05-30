@@ -60,8 +60,9 @@ type Mutation {
     createProjectType(name: String!): ProjectType!
     createLocation(name: String!): Location!
     createSession(project: ID! , project_type: ID!, location: ID!, time_goal: Int!): Session!
-    editTotalTime(session: ID!, seconds: Int!): ID!
-    addProjectTime(project: ID!, seconds: Int!): ID!
-    addDwTime(user: ID!, seconds: Int!): ID!
+    editSessionTime(session: ID!, seconds: Int!): Int!
+    addProjectTime(project: ID!, seconds: Int!): Int!
+    addDwTime(seconds: Int!): Int!
+    updateNextMilestoneHr: Int!
 }
 `

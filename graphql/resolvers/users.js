@@ -3,6 +3,7 @@ const { authenticateGoogle } = require('../../util/passport');
 
 const User = require('../../models/User');
 const checkAuth = require('../../util/check-auth');
+const { updateTimeMilestone } = require('../../util/updateTimeMilestone');
 
 module.exports = {
     Mutation: {
@@ -42,25 +43,44 @@ module.exports = {
                 return error;
             }
         },
-        async addDwTime(_, { user, seconds }, context) {
-            checkAuth(context);
+        async addDwTime(_, { seconds }, context) {
+            const user = checkAuth(context);
+            const currUser = await User.findOne({ '_id': user.id });
 
-            const foundUser = await User.findOne({ '_id': user });
-
-            if (foundUser) {
+            if (currUser) {
                 try {
-                    const updated = await User.updateOne(
-                        { _id: user },
-                        { $set: { "totalDwSeconds" : foundUser.totalDwSeconds + seconds } }
+                    const updatedDwTime = currUser.totalDwSeconds + seconds
+                    await User.updateOne(
+                        { _id: user.id },
+                        { $set: {"totalDwSeconds" :  updatedDwTime} }
                     );
 
-                    return user;
+                    return updatedDwTime;
                 } catch (e) {
                     throw new Error("Unable to update user: " + e);
                 }
             } else {
                 throw new Error("Unable to find user to update");
             }
+        },
+        async updateNextMilestoneHr(_, {}, context) {
+            const user = checkAuth(context);
+            const currUser = await User.findOne({ '_id': user.id });
+            const updatedTimeMilestone = updateTimeMilestone(currUser.totalDwSeconds, currUser.nextMilestoneHr);
+
+            if (updatedTimeMilestone != currUser.nextMilestoneHr) {
+                try {
+                    await User.updateOne(
+                        { _id: user.id },
+                        { $set: { "nextMilestoneHr" : updatedTimeMilestone } }
+                    );
+
+                } catch (e) {
+                    throw new Error("Unable to update user's next milestone hour: " + e);
+                }
+            }
+
+            return updatedTimeMilestone;
         },
     }
 };

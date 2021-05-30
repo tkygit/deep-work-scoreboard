@@ -21,7 +21,7 @@ module.exports = {
 
             return session;
         },
-        async editTotalTime(_, { session, seconds }, context) {
+        async editSessionTime(_, { session, seconds }, context) {
             checkAuth(context);
 
             try {
@@ -30,7 +30,7 @@ module.exports = {
                     { $set: { "timeSeconds" : seconds } }
                 );
 
-                return session;
+                return seconds;
             } catch (e) {
                 throw new Error("Unable to update session: " + e);
             }
