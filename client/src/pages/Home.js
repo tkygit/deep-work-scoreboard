@@ -15,7 +15,7 @@ function Home() {
         <HomepageStyles>
             <Navbar/>
             <div className="hero">
-                <h1>A digital artifact of your deep work hour count</h1>
+                <h1>Homepage</h1>
             </div>
         </HomepageStyles>
     );
