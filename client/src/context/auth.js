@@ -1,52 +1,64 @@
-import React, { useReducer, createContext } from 'react';
+    import React, { useReducer, createContext } from 'react';
+    import jwtDecode from 'jwt-decode';
 
-const initialState = {
-  user: null
-};
-
-const AuthContext = createContext({
-  user: null,
-  login: (userData) => {},
-  logout: () => {}
-});
-
-function authReducer(state, action) {
-  switch (action.type) {
-    case 'LOGIN':
-      return {
-        ...state,
-        user: action.payload
-      };
-    case 'LOGOUT':
-      return {
-        ...state,
+    const initialState = {
         user: null
-      };
-    default:
-      return state;
-  }
-}
+    };
 
-function AuthProvider(props) {
-  const [state, dispatch] = useReducer(authReducer, initialState);
+    if (localStorage.getItem('token')) {
+        const decodedToken = jwtDecode(localStorage.getItem('token'));
+    
+        if (decodedToken.exp * 1000 < Date.now()) {
+        localStorage.removeItem('token');
+        } else {
+        initialState.user = decodedToken;
+        }
+    }
 
-  function login(userData) {
-    dispatch({
-      type: 'LOGIN',
-      payload: userData
+    const AuthContext = createContext({
+        user: null,
+        login: (userData) => {},
+        logout: () => {}
     });
-  }
 
-  function logout() {
-    dispatch({ type: 'LOGOUT' });
-  }
+    function authReducer(state, action) {
+        switch (action.type) {
+        case 'LOGIN':
+            return {
+            ...state,
+            user: action.payload
+            };
+        case 'LOGOUT':
+            return {
+            ...state,
+            user: null
+            };
+        default:
+            return state;
+        }
+    }
 
-  return (
-    <AuthContext.Provider
-      value={{ user: state.user, login, logout }}
-      {...props}
-    />
-  );
-}
+    function AuthProvider(props) {
+        const [state, dispatch] = useReducer(authReducer, initialState);
 
-export { AuthContext, AuthProvider };
+        function login(userData) {
+            localStorage.setItem('token', userData.token);
+            dispatch({
+                type: 'LOGIN',
+                payload: userData
+            });
+        }
+
+        function logout() {
+        dispatch({ type: 'LOGOUT' });
+        }
+
+        return (
+        <AuthContext.Provider
+            value={{ user: state.user, login, logout }}
+            {...props}
+        />
+        );
+    }
+
+    export { AuthContext, AuthProvider };

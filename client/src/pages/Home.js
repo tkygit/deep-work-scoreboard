@@ -1,12 +1,10 @@
 import styled from 'styled-components'
 import React from 'react';
+
 import Navbar from '../components/Navbar'
+import BodyContainer from '../components/styles/BodyContainer'
 
 const HomepageStyles = styled.div`
-  .hero {
-    padding: 10rem 0;
-    width: 80%;
-  }
 `;
 
 
@@ -14,9 +12,9 @@ function Home() {
     return (
         <HomepageStyles>
             <Navbar/>
-            <div className="hero">
+            <BodyContainer>
                 <h1>Homepage</h1>
-            </div>
+            </BodyContainer>
         </HomepageStyles>
     );
 }

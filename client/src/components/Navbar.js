@@ -7,7 +7,6 @@ import { AuthContext } from '../context/auth';
 
 import styled from 'styled-components';
 import Button from './styles/Button';
-import ButtonLink from './styles/ButtonLink';
 
 const NavStyles = styled.div`
 
@@ -46,14 +45,14 @@ const NavStyles = styled.div`
     }
 `;
 
-function Navbar(props) {
+function Navbar() {
     
     const context = useContext(AuthContext);
     const { user, logout } = useContext(AuthContext);
 
     const [authGoogle] = useMutation(AUTH_GOOGLE, {
         update(_, { data: userData }) {
-            context.login(userData);
+            context.login(userData.authGoogle);
         },
         onError(err) {
             console.log(err);
@@ -61,7 +60,7 @@ function Navbar(props) {
     });
 
     const handleLogin = googleData => {
-        authGoogle({ variables: { accessToken: googleData.accessToken } });
+        authGoogle({ variables: { accessToken: googleData.accessToken, expiresIn: googleData.tokenObj.expires_in } });
     };
 
     return (   
@@ -72,7 +71,7 @@ function Navbar(props) {
                 { user ? 
                     <>
                         <Link to="/session"><Button>Start a deep work session</Button></Link>
-                        <Link to="/dashboard">{user.authGoogle.firstName} {user.authGoogle.lastName}</Link>
+                        <Link to="/dashboard">{user.firstName} {user.lastName}</Link>
                     </>
                     :
                     <>
@@ -92,15 +91,15 @@ function Navbar(props) {
 }
 
 const AUTH_GOOGLE = gql`
-    mutation authGoogle($accessToken: String!) {
-        authGoogle(input: { accessToken: $accessToken }) {
-            token
+    mutation authGoogle($accessToken: String!, $expiresIn: Int!) {
+        authGoogle(input: { accessToken: $accessToken,  expiresIn: $expiresIn }) {
             id
             firstName
             lastName
             email
             totalDwSeconds
             nextMilestoneHr
+            token
         }
     }
 `;

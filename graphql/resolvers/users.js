@@ -2,15 +2,19 @@ const mongoose = require('mongoose');
 const { authenticateGoogle } = require('../../util/passport');
 
 const User = require('../../models/User');
+const Project = require('../../models/Project');
+const ProjectType = require('../../models/ProjectType');
+const Location = require('../../models/Location');
+
 const checkAuth = require('../../util/check-auth');
 const { updateTimeMilestone } = require('../../util/updateTimeMilestone');
 
 module.exports = {
     Mutation: {
-        authGoogle: async (_, { input: { accessToken } }, { req, res }) => {
+        authGoogle: async (_, { input: { accessToken, expiresIn } }, { req, res }) => {
             req.body = {
                 ...req.body,
-                access_token: accessToken,
+                access_token: accessToken
             };
 
             try {
@@ -24,7 +28,7 @@ module.exports = {
                         return ({
                             ...user._doc,
                             id: user.id,
-                            token: user.generateJWT(),
+                            token: user.generateJWT(expiresIn)
                         });
                     }
                 }

@@ -23,11 +23,15 @@ const userSchema = new Schema({
 });
 
 // Model Methods
-userSchema.methods.generateJWT = function () {
+userSchema.methods.generateJWT = function (expiresInSecs) {
     return jwt.sign({
         email: this.email,
         id: this._id,
-    }, SECRET_KEY, { expiresIn: '1h' });
+        firstName: this.firstName,
+        lastName: this.lastName,
+        nextMilestoneHr: this.nextMilestoneHr,
+        totalDwSeconds: this.totalDwSeconds
+    }, SECRET_KEY, { expiresIn: expiresInSecs });
 }
 
 userSchema.statics.upsertGoogleUser = async function ({ accessToken, refreshToken, profile }) {

@@ -10,11 +10,12 @@ type User {
     totalDwSeconds: Int!
     nextMilestoneHr: Int!
     createdAt: String!
-    token: String
+    token: String!
 }
 
 input AuthInput {
     accessToken: String!
+    expiresIn: Int!
 }
 
 type Project {
