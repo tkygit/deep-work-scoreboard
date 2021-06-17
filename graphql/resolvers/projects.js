@@ -21,9 +21,8 @@ module.exports = {
                     createdAt: new Date().toISOString(),
                     totalProjectTime: 0
                 });
-    
                 const project = await newProject.save();
-    
+                
                 return project;   
             } else {
                 return foundProject;
@@ -50,5 +49,17 @@ module.exports = {
                 throw new Error("Unable to find project to update");
             }
         },
+    },
+    Query: {
+        async getProjects(_, {}, context) {
+            const user = checkAuth(context);
+
+            try {
+                const projects = await Project.find({ 'user': user.id }).sort({ createdAt: -1 });
+                return projects;
+            } catch (err) {
+                throw new Error(err);
+            }
+        }
     }
 };

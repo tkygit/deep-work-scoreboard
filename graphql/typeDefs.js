@@ -54,7 +54,10 @@ type Session {
 }
 
 type Query {
-    getUsers: [User]
+    getLocations: [Location]
+    getProjects: [Project]
+    getProjectTypes: [ProjectType]
+    getSessions: [Session]
 }
 
 type Mutation {

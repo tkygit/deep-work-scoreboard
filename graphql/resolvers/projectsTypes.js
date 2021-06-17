@@ -28,5 +28,17 @@ module.exports = {
                 return foundProjectType;
             }
         }
+    },
+    Query: {
+        async getProjectTypes(_, {}, context) {
+            const user = checkAuth(context);
+
+            try {
+                const projectTypes = await ProjectType.find({ 'user': user.id }).sort({ createdAt: -1 });
+                return projectTypes;
+            } catch (err) {
+                throw new Error(err);
+            }
+        }
     }
 };

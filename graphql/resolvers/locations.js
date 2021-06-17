@@ -28,5 +28,17 @@ module.exports = {
                 return foundLocation;
             }
         }
+    },
+    Query: {
+        async getLocations(_, {}, context) {
+            const user = checkAuth(context);
+
+            try {
+                const locations = await Location.find({ 'user': user.id }).sort({ createdAt: -1 });
+                return locations;
+            } catch (err) {
+                throw new Error(err);
+            }
+        }
     }
 };

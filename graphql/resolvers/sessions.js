@@ -41,5 +41,17 @@ module.exports = {
                 throw new Error("Unable to update session: " + e);
             }
         },
+    },
+    Query: {
+        async getSessions(_, {}, context) {
+            const user = checkAuth(context);
+
+            try {
+                const sessions = await Session.find({ 'user': user.id }).sort({ createdAt: -1 });
+                return sessions;
+            } catch (err) {
+                throw new Error(err);
+            }
+        }
     }
 };

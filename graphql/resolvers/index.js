@@ -11,5 +11,12 @@ module.exports = {
         ...projectTypesResolvers.Mutation,
         ...locationsResolvers.Mutation,
         ...sessionsResolvers.Mutation
+    },
+    Query: {
+        ...usersResolvers.Query,
+        ...projectsResolvers.Query,
+        ...projectTypesResolvers.Query,
+        ...locationsResolvers.Query,
+        ...sessionsResolvers.Query
     }
 }
