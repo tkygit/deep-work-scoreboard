@@ -19,7 +19,6 @@ module.exports = {
             });
 
             const session = await newSession.save();
-
             return session;
         },
         async editSessionTime(_, { session, seconds }, context) {

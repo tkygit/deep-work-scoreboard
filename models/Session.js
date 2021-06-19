@@ -5,15 +5,15 @@ const sessionSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'projects'
     },
-    project_type: {
+    projectType: {
         type: Schema.Types.ObjectId,
         ref: 'projecttypes'   
     },
     location: {
         type: Schema.Types.ObjectId,
-        ref: 'location'   
+        ref: 'locations'   
     },
-    time_goal: Number,
+    timeGoal: Number,
     user: {
         type: Schema.Types.ObjectId,
         ref: 'users'

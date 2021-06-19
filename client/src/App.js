@@ -5,7 +5,8 @@ import { AuthProvider } from './context/auth';
 import Page from './components/Page';
 import Home from './pages/Home';
 import Dashboard from './pages/Dashboard';
-import Session from './pages/Session';
+import StartSession from './pages/StartSession';
+import SingleSession from './pages/SingleSession';
 
 function App() {
     return (
@@ -14,7 +15,8 @@ function App() {
                 <Router>
                     <Route exact path="/" component={Home} />
                     <Route exact path="/dashboard" component={Dashboard} />
-                    <Route exact path="/session" component={Session} />
+                    <Route exact path="/session" component={StartSession} />
+                    <Route exact path="/session/:sessionId" component={SingleSession} />
                 </Router>
             </Page>
         </AuthProvider>
