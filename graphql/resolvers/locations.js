@@ -39,6 +39,16 @@ module.exports = {
             } catch (err) {
                 throw new Error(err);
             }
-        }
+        },
+        async getLocation(_, { id }, context) {
+            const user = checkAuth(context);
+
+            try {
+                const foundLocation = await Location.findOne({ '_id': id });
+                return foundLocation;
+            } catch (err) {
+                throw new Error(err);
+            }
+        }      
     }
 };

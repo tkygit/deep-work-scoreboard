@@ -60,6 +60,16 @@ module.exports = {
             } catch (err) {
                 throw new Error(err);
             }
-        }
+        },
+        async getProject(_, { id }, context) {
+            const user = checkAuth(context);
+
+            try {
+                const foundProject = await Project.findOne({ '_id': id });
+                return foundProject;
+            } catch (err) {
+                throw new Error(err);
+            }
+        }      
     }
 };

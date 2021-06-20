@@ -39,6 +39,16 @@ module.exports = {
             } catch (err) {
                 throw new Error(err);
             }
-        }
+        },
+        async getProjectType(_, { id }, context) {
+            const user = checkAuth(context);
+
+            try {
+                const foundProjectType = await ProjectType.findOne({ '_id': id });
+                return foundProjectType;
+            } catch (err) {
+                throw new Error(err);
+            }
+        }      
     }
 };

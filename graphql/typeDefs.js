@@ -42,9 +42,9 @@ type Location {
 
 type Session {
     id: ID!
-    project: Project!
-    projectType: ProjectType!
-    location: Location!
+    project: ID!
+    projectType: ID!
+    location: ID!
     timeGoal: Int
     user: User!
     createdAt: String!
@@ -58,6 +58,9 @@ type Query {
     getProjects: [Project]
     getProjectTypes: [ProjectType]
     getSessions: [Session]
+    getLocation(id: ID!): Location
+    getProject(id: ID!): Project
+    getProjectType(id: ID!): ProjectType
 }
 
 type Mutation {
