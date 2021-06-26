@@ -53,3 +53,16 @@ mutation createLocation($name: String!) {
     }
 }
 `;
+
+export const GET_SESSION_QUERY = gql`
+query getSession($id: ID!) {
+    getSession(id: $id) {
+        id,
+        createdAt
+        timeGoal
+        project
+        projectType
+        location
+    }
+}
+`;

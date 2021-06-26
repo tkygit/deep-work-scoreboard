@@ -15,15 +15,14 @@ import { PromiseProvider } from 'mongoose';
 function StartSession(props) {
 
     const { user } = useContext(AuthContext);
-    const [ hourGoal, setHourTimeGoal ] = useState(0);
-    const [ minGoal, setMinTimeGoal ] = useState(0);
-    const [ timeGoal, setTimeGoal ] = useState(0);
+    var hourGoal = 0;
+    var minGoal = 0;
 
     const timeGoalChange = (e) => {
         if (e.target.name == "hourGoal") {
-            setHourTimeGoal(e.target.value * 3600);
+            hourGoal = e.target.value * 3600;
         } else {
-            setMinTimeGoal(e.target.value * 60);
+            minGoal = e.target.value * 60;
         }
     };
 
@@ -34,23 +33,20 @@ function StartSession(props) {
     });
 
     function startSessionCallback() {
-        setTimeGoal(hourGoal + minGoal);
-        createSession();
+        createSession({ variables: {
+            project: values.project,
+            projectType: values.project_type,
+            location: values.location,
+            timeGoal: hourGoal + minGoal
+        }});
     }
 
     const [createSession] = useMutation(CREATE_SESSION_MUTATION, {
         update(_, { data }) {
-            console.log(data);
             props.history.push(`session/${data.createSession.id}`)
         },
         onError(err) {
             console.log(err);
-        },
-        variables: {
-            project: values.project,
-            projectType: values.project_type,
-            location: values.location,
-            timeGoal: timeGoal
         }
     });
 
@@ -85,8 +81,6 @@ const CREATE_SESSION_MUTATION = gql`
     mutation createSession($project: ID!, $projectType: ID!, $location: ID!, $timeGoal: Int!) {
         createSession(project: $project, projectType: $projectType, location: $location, timeGoal: $timeGoal) {
             id
-            createdAt
-            timeGoal
         }
     }
 `;

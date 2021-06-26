@@ -61,6 +61,7 @@ type Query {
     getLocation(id: ID!): Location
     getProject(id: ID!): Project
     getProjectType(id: ID!): ProjectType
+    getSession(id: ID!): Session
 }
 
 type Mutation {

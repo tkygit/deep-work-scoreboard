@@ -51,6 +51,16 @@ module.exports = {
             } catch (err) {
                 throw new Error(err);
             }
-        }
+        },
+        async getSession(_, { id }, context) {
+            const user = checkAuth(context);
+
+            try {
+                const foundSession = await Session.findOne({ '_id': id });
+                return foundSession;
+            } catch (err) {
+                throw new Error(err);
+            }
+        }  
     }
 };
