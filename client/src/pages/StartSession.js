@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useContext } from 'react';
 import { gql, useMutation } from '@apollo/client';
 
 import Navbar from '../components/Navbar';
@@ -10,7 +10,6 @@ import FormFieldStyles from '../components/styles/FormFieldStyles';
 
 import { AuthContext } from '../context/auth';
 import { useForm } from '../util/form';
-import { PromiseProvider } from 'mongoose';
 
 function StartSession(props) {
 
@@ -19,7 +18,7 @@ function StartSession(props) {
     var minGoal = 0;
 
     const timeGoalChange = (e) => {
-        if (e.target.name == "hourGoal") {
+        if (e.target.name === "hourGoal") {
             hourGoal = e.target.value * 3600;
         } else {
             minGoal = e.target.value * 60;

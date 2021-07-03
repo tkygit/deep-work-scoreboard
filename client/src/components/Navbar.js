@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useContext } from 'react';
 import { gql, useMutation } from '@apollo/client';
 import { GoogleLogin } from 'react-google-login';
 import { Link } from 'react-router-dom';

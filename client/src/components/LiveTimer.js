@@ -42,9 +42,9 @@ function LiveTimer(props) {
         const numHours = Math.floor(timeGoal / 3600);
         const numMinutes = Math.floor(timeGoal % 3600 / 60);
 
-        if (numHours == 0) {
+        if (numHours === 0) {
             return numMinutes.toString() + "m"
-        } else if (numHours > 0 && numMinutes == 0) {
+        } else if (numHours > 0 && numMinutes === 0) {
             return numHours.toString() + "h"
         } else {
             return numHours.toString() + "h " + numMinutes.toString() + "m"

@@ -20,20 +20,12 @@ function FormField(props) {
     var items;
     const [modalIsOpen, setIsOpen] = useState(false);
 
-    switch(fieldType) {
-        case "Project":
-            const { data: { getProjects: projects } = {} } = useQuery(GET_PROJECTS_QUERY);
-            items = projects;
-            break;
-        case "Project Type":
-            const { data: { getProjectTypes: projectTypes } = {} } = useQuery(GET_PROJECT_TYPES_QUERY);
-            items = projectTypes;
-            break;
-        case "Location":
-            const { data: { getLocations: locations } = {} } = useQuery(GET_LOCATIONS_QUERY);
-            items = locations;
-            break;
-    }
+    const { data: { getProjects: projects } = {} } = useQuery(GET_PROJECTS_QUERY, {skip: fieldType !== "Project"});
+    if (projects !== undefined) items = projects;
+    const { data: { getProjectTypes: projectTypes } = {} } = useQuery(GET_PROJECT_TYPES_QUERY, {skip: fieldType !== "Project Type"});
+    if (projectTypes !== undefined) items = projectTypes;
+    const { data: { getLocations: locations } = {} } = useQuery(GET_LOCATIONS_QUERY, {skip: fieldType !== "Location"});
+    if (locations !== undefined) items = locations;
 
     const openModal = () => { setIsOpen(true) };
     const closeModal = () => { setIsOpen(false) };
@@ -93,6 +85,8 @@ function FormField(props) {
             case "Location":
                 createLocation();
                 break;
+            default:
+                break;
         }
         closeModal();
         selectDropdown(fieldType + "Dropdown", items[0]);
@@ -100,7 +94,7 @@ function FormField(props) {
 
     return (
         <FormFieldStyles>
-            { items != undefined &&
+            { items !== undefined &&
                 <>
                 <label>{fieldType}</label>
                 <select 
