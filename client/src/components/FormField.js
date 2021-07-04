@@ -4,6 +4,7 @@ import Modal from 'react-modal';
 
 import { ModalForm, ModalLabel, ModalInput, ModalButton, ModalContainer} from './styles/Modal';
 import FormFieldStyles from './styles/FormFieldStyles';
+import { UnderlineLink } from './styles/Link';
 import { useForm , selectDropdown } from '../util/form';
 import {
     GET_PROJECTS_QUERY, 
@@ -109,7 +110,7 @@ function FormField(props) {
                         <option key={item.id} value={item.id}>{item.name}</option>
                     ))}
                 </select>
-                <p className="link-to-modal" onClick={openModal}>Add a new {fieldType.toLowerCase()} +</p>
+                <UnderlineLink onClick={openModal}>Add a new {fieldType.toLowerCase()} +</UnderlineLink>
                 <Modal
                     isOpen={modalIsOpen}
                     onRequestClose={closeModal}

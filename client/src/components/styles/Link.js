@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-const ButtonLink = styled.div`
+export const TextLink = styled.div`
     font-size: 1.6rem;
     color: white;
     margin: 0;
@@ -20,4 +20,8 @@ const ButtonLink = styled.div`
     }
 `;
 
-export default ButtonLink;
+export const UnderlineLink = styled.p`
+    margin-left: 2rem;
+    cursor: pointer;
+    border-bottom: 0.1px solid white;
+`;

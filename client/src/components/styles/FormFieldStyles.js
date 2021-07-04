@@ -43,12 +43,6 @@ const FormFieldStyles = styled.div`
     .time-label {
         margin: 0 1rem;
     }
-
-    .link-to-modal {
-        margin-left: 2rem;
-        cursor: pointer;
-        border-bottom: 0.1px solid white;
-    }
 `;
 
 export default FormFieldStyles;
