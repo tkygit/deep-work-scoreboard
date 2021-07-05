@@ -5,11 +5,6 @@ import Button from './styles/Button';
 import { UnderlineLink } from './styles/Link';
 
 const TimerStyles = styled.div`
-    .timer {
-        font-size: 15.5rem;
-        font-family: 'IBM Plex Mono', mono;
-    }
-
     .percentage-bar {
         display: inline-block;
         border: solid white 3px;
@@ -57,6 +52,10 @@ function LiveTimer(props) {
         timerRef.current = setInterval(() => {
             setTimer(Date.now() - timerStart);
         }, 1000);
+
+        return () => {
+            clearInterval(timerRef.current);
+        }
     }, [timerStart]);
 
     const handlePause = () => {
@@ -70,7 +69,7 @@ function LiveTimer(props) {
     };
 
     const handleFinish = () => {
-
+        props.onFinish();
     };
 
     const displaySessionGoal = (timeGoal) => {
@@ -104,7 +103,7 @@ function LiveTimer(props) {
     return (
         <TimerStyles>
             <h3>Elapsed deep work time</h3>
-            <div className="timer">{hours}h {minutes}m {seconds}s</div>
+            <div className="time-display">{hours}h {minutes}m {seconds}s</div>
             <div className="progress-bar-container">
                 <p className="top-right-label">{displaySessionGoal(session.timeGoal)}</p>
                 <div className="percentage-bar">

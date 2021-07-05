@@ -75,8 +75,15 @@ const GlobalStyle = createGlobalStyle`
   h4 {
     font-size: 2rem;
     font-family: 'IBM Plex Sans', sans-serif;
-    font-weight: 700;
+    font-weight: 500;
     margin: 0;
+  }
+  .time-display {
+    font-size: 15.5rem;
+    font-family: 'IBM Plex Mono', mono;
+  }
+  strong {
+    font-weight: 600;
   }
 `;
 
