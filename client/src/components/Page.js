@@ -34,11 +34,6 @@ const GlobalStyle = createGlobalStyle`
   a {
     cursor: pointer;
     color: white;
-    font-weight: 700;
-    &:hover {
-      font-weight: 700;
-      color: ${props => props.theme.blue};
-    }
   }
   button {  
     font-family: 'IBM Plex Sans', sans-serif; 

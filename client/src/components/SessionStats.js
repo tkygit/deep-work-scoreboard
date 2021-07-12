@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
 import Button from './styles/Button';
@@ -42,8 +43,12 @@ function SessionStats({ stats }) {
                 <div className="stat">Your deep work scoreboard is now <strong>{convertToHrMins(stats.totalDwTime)}</strong>.</div>
                 <div className="stat">You have spent <strong>{convertToHrMins(stats.totalProjectTime)}</strong> on <strong>Default</strong> project.</div>
             </div>
-            <Button className="session-button">Start another deep work session</Button>
-            <UnderlineLink>Go back to my dashboard</UnderlineLink>
+            <Link to="/session">
+                <Button className="session-button">Start another deep work session</Button>
+            </Link>
+            <Link to="/dashboard">
+                <UnderlineLink>Go back to my dashboard</UnderlineLink>
+            </Link>
         </SessionStatsStyles>
     );
 }

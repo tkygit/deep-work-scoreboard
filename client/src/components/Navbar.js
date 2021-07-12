@@ -66,7 +66,7 @@ function Navbar() {
     return (   
         <NavStyles>
             <div className="bar">
-                <a href="/"><img src="/logo.svg" alt="Deep Work Scoreboard"/></a>
+                <a href={user ? "/dashboard" : "/"}><img src="/logo.svg" alt="Deep Work Scoreboard"/></a>
                 <div className="links-container">
                 { user ? 
                     <>
