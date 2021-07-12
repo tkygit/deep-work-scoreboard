@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { useQuery } from '@apollo/client';
+import { gql, useQuery, useMutation } from '@apollo/client';
 
 import Navbar from '../components/Navbar';
 import BodyContainer from '../components/styles/BodyContainer';
@@ -14,14 +14,35 @@ function SingleSession(props) {
     const sessionId = props.match.params.sessionId;
     const { user } = useContext(AuthContext);
     const [ isLive, setisLive ] = useState(true);
+    const [ stats, setStats ] = useState({});
 
-    const { data: getSession } = useQuery(GET_SESSION_QUERY, {
+    const { data: session } = useQuery(GET_SESSION_QUERY, {
         variables: {
             id: sessionId
         }
     });
 
-    const handleFinish = () => {
+    const [editSessionTime] = useMutation(EDIT_SESSION_TIME);
+    const [addDwTime] = useMutation(ADD_DW_TIME_MUTATION);
+    const [addProjectTime] = useMutation(ADD_PROJECT_TIME_MUTATION);
+
+    const handleFinish = async (timeSeconds) => {
+        // Update user's deep work tally
+        const { data: updatedDwTime } = await addDwTime({ variables: { seconds: timeSeconds }});
+
+        // Update project's deep work tally
+        const { data: updatedProjectTime } = await addProjectTime({ variables: { project: session.getSession.project, seconds: timeSeconds }});
+
+        // Update session stats
+        const { data: totalSessionTime } = await editSessionTime({ variables: { session: session.getSession.id , seconds: timeSeconds }});
+
+        setStats( {
+            timeGoal: session.getSession.timeGoal,
+            totalSessionTime: totalSessionTime.editSessionTime,
+            totalDwTime: updatedDwTime.addDwTime,
+            totalProjectTime: updatedProjectTime.addProjectTime
+        })
+
         setisLive(false);
     }
 
@@ -29,11 +50,11 @@ function SingleSession(props) {
         <div>
             <Navbar/>
             <BodyContainer>
-                { (user && getSession) ?
+                { (user && session) ?
                         (isLive) ?
-                        <LiveTimer session={getSession} onFinish={handleFinish} />
+                        <LiveTimer session={session} onFinish={handleFinish} />
                         :
-                        <SessionStats />
+                        <SessionStats stats={stats}/>
                     :
                     <>
                         <p>Please login</p>
@@ -43,5 +64,9 @@ function SingleSession(props) {
         </div>
     );
 }
+
+const EDIT_SESSION_TIME = gql ` mutation editSessionTime ($session: ID!, $seconds: Int!) { editSessionTime(session: $session, seconds: $seconds) }`;
+const ADD_DW_TIME_MUTATION = gql` mutation addDwTime($seconds: Int!) { addDwTime(seconds: $seconds) } `;
+const ADD_PROJECT_TIME_MUTATION = gql` mutation addProjectTime($project: ID!, $seconds: Int!) { addProjectTime(project: $project, seconds: $seconds) } `;
 
 export default SingleSession;

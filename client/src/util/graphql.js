@@ -66,3 +66,14 @@ query getSession($id: ID!) {
     }
 }
 `;
+
+export const GET_PROJECT_QUERY = gql`
+query getProject($id: ID!) {
+    getProject(id: $id) {
+        id,
+        name
+        totalProjectTime
+    }
+}
+`;
+

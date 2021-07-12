@@ -31,7 +31,7 @@ module.exports = {
                     { $set: {
                         "completedAt": new Date().toISOString(),
                         "timeSeconds": seconds,
-                        "endTally": currUser.totalDwSeconds + seconds
+                        "endTally": currUser.totalDwSeconds
                     }}
                 );
 

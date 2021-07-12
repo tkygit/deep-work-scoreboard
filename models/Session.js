@@ -3,7 +3,7 @@ const { model, Schema } = require('mongoose');
 const sessionSchema = new Schema({
     project: {
         type: Schema.Types.ObjectId,
-        ref: 'projects'
+        ref: 'projects'   
     },
     projectType: {
         type: Schema.Types.ObjectId,

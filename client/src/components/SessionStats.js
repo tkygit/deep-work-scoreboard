@@ -4,6 +4,8 @@ import styled from 'styled-components';
 import Button from './styles/Button';
 import { UnderlineLink } from './styles/Link';
 
+import convertToHrMins from '../util/time';
+
 const SessionStatsStyles = styled.div`
     .session-stats {
         margin-bottom: 4rem;
@@ -18,17 +20,27 @@ const SessionStatsStyles = styled.div`
     }
 `;
 
-function SessionStats() {
+function SessionStats({ stats }) {
+
+    console.log(stats);
+
+    const timePercent = () => {
+        return Math.floor((stats.totalSessionTime / stats.timeGoal) * 100);
+    }
 
     return (
         <SessionStatsStyles>
             <h3>You stayed focused for</h3>
-            <div className="time-display">1hr 12min</div>
+            <div className="time-display">{convertToHrMins(stats.totalSessionTime)}</div>
             <div className="session-stats">
                 <h4>SESSION STATS</h4>
-                <div className="stat">Your goal was to stay focused for <strong>1 hour</strong>. You beat this by <strong>2 percent</strong>!</div>
-                <div className="stat">Your deep work scoreboard is now <strong>27 hours 45 minutes</strong>.</div>
-                <div className="stat">You have spent <strong>27 hours 45 minutes</strong> on <strong>Default</strong> project.</div>
+                { stats.totalSessionTime >= stats.timeGoal ??
+                <div className="stat">
+                    Your goal was to stay focused for <strong>{convertToHrMins(stats.timeGoal)}</strong>. 
+                    You beat this by <strong>{timePercent()} percent</strong>!
+                </div> }
+                <div className="stat">Your deep work scoreboard is now <strong>{convertToHrMins(stats.totalDwTime)}</strong>.</div>
+                <div className="stat">You have spent <strong>{convertToHrMins(stats.totalProjectTime)}</strong> on <strong>Default</strong> project.</div>
             </div>
             <Button className="session-button">Start another deep work session</Button>
             <UnderlineLink>Go back to my dashboard</UnderlineLink>

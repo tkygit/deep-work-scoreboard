@@ -4,6 +4,8 @@ import styled from 'styled-components';
 import Button from './styles/Button';
 import { UnderlineLink } from './styles/Link';
 
+import convertToHrMins from '../util/time';
+
 const TimerStyles = styled.div`
     .percentage-bar {
         display: inline-block;
@@ -69,20 +71,8 @@ function LiveTimer(props) {
     };
 
     const handleFinish = () => {
-        props.onFinish();
-    };
-
-    const displaySessionGoal = (timeGoal) => {
-        const numHours = Math.floor(timeGoal / 3600);
-        const numMinutes = Math.floor(timeGoal % 3600 / 60);
-
-        if (numHours === 0) {
-            return numMinutes.toString() + "m"
-        } else if (numHours > 0 && numMinutes === 0) {
-            return numHours.toString() + "h"
-        } else {
-            return numHours.toString() + "h " + numMinutes.toString() + "m"
-        }
+        const timeSeconds = Math.floor(timer/1000);
+        props.onFinish(timeSeconds);
     };
 
     const getPercent = () => {
@@ -105,7 +95,7 @@ function LiveTimer(props) {
             <h3>Elapsed deep work time</h3>
             <div className="time-display">{hours}h {minutes}m {seconds}s</div>
             <div className="progress-bar-container">
-                <p className="top-right-label">{displaySessionGoal(session.timeGoal)}</p>
+                <p className="top-right-label">{convertToHrMins(session.timeGoal)}</p>
                 <div className="percentage-bar">
                     <ProgressBar percent={getPercent}/>
                 </div>
