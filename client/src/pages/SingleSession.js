@@ -31,13 +31,14 @@ function SingleSession(props) {
         const { data: updatedDwTime } = await addDwTime({ variables: { seconds: timeSeconds }});
 
         // Update project's deep work tally
-        const { data: updatedProjectTime } = await addProjectTime({ variables: { project: session.getSession.project, seconds: timeSeconds }});
+        const { data: updatedProjectTime } = await addProjectTime({ variables: { project: session.getSession.project.id, seconds: timeSeconds }});
 
         // Update session stats
         const { data: totalSessionTime } = await editSessionTime({ variables: { session: session.getSession.id , seconds: timeSeconds }});
 
         setStats( {
             timeGoal: session.getSession.timeGoal,
+            project: session.getSession.project.name,
             totalSessionTime: totalSessionTime.editSessionTime,
             totalDwTime: updatedDwTime.addDwTime,
             totalProjectTime: updatedProjectTime.addProjectTime

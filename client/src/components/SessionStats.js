@@ -23,8 +23,6 @@ const SessionStatsStyles = styled.div`
 
 function SessionStats({ stats }) {
 
-    console.log(stats);
-
     const timePercent = () => {
         return Math.floor((stats.totalSessionTime / stats.timeGoal) * 100);
     }
@@ -35,13 +33,13 @@ function SessionStats({ stats }) {
             <div className="time-display">{convertToHrMins(stats.totalSessionTime)}</div>
             <div className="session-stats">
                 <h4>SESSION STATS</h4>
-                { stats.totalSessionTime >= stats.timeGoal ??
+                { stats.totalSessionTime >= stats.timeGoal ?
                 <div className="stat">
                     Your goal was to stay focused for <strong>{convertToHrMins(stats.timeGoal)}</strong>. 
                     You beat this by <strong>{timePercent()} percent</strong>!
-                </div> }
+                </div> : <></>}
                 <div className="stat">Your deep work scoreboard is now <strong>{convertToHrMins(stats.totalDwTime)}</strong>.</div>
-                <div className="stat">You have spent <strong>{convertToHrMins(stats.totalProjectTime)}</strong> on <strong>Default</strong> project.</div>
+                <div className="stat">You have spent <strong>{convertToHrMins(stats.totalProjectTime)}</strong> on <strong>{stats.project}</strong> project.</div>
             </div>
             <Link to="/session">
                 <Button className="session-button">Start another deep work session</Button>

@@ -60,9 +60,16 @@ query getSession($id: ID!) {
         id,
         createdAt
         timeGoal
-        project
-        projectType
-        location
+        project {
+            id
+            name
+        }
+        projectType {
+            name
+        }
+        location {
+            name
+        }
     }
 }
 `;

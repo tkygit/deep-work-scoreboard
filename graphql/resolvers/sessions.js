@@ -46,7 +46,11 @@ module.exports = {
             const user = checkAuth(context);
 
             try {
-                const sessions = await Session.find({ 'user': user.id }).sort({ createdAt: -1 });
+                const sessions = await Session.find({ 'user': user.id })
+                                              .sort({ createdAt: -1 })
+                                              .populate('project')
+                                              .populate('projectType')
+                                              .populate('location');
                 return sessions;
             } catch (err) {
                 throw new Error(err);
@@ -56,7 +60,10 @@ module.exports = {
             const user = checkAuth(context);
 
             try {
-                const foundSession = await Session.findOne({ '_id': id });
+                const foundSession = await Session.findOne({ '_id': id })
+                                                  .populate('project')
+                                                  .populate('projectType')
+                                                  .populate('location');
                 return foundSession;
             } catch (err) {
                 throw new Error(err);

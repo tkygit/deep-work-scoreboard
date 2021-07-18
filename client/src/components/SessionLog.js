@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { useQuery, useMutation } from '@apollo/client';
+import { gql, useQuery } from '@apollo/client';
+import { DateTime } from 'luxon';
+
+import convertToHrMins from '../util/time';
 
 const SessionLogStyles = styled.div`
     padding-top: 4rem;
@@ -40,36 +43,65 @@ const SessionLogStyles = styled.div`
 
 function SessionLog() {
 
+    const { data: { getSessions: sessions } = {} } = useQuery(GET_SESSIONS_QUERY);
+
     return (
         <SessionLogStyles>
-            <table>
-                <thead>
-                    <tr className="table-head">
-                        <th className="col-1">Date</th>
-                        <th className="col-2">Start Time</th>
-                        <th className="col-3">End Time</th>
-                        <th className="col-4">Total Time</th>
-                        <th className="col-5">Project</th>
-                        <th className="col-6">Project Type</th>
-                        <th className="col-7">Location</th>
-                        <th className="col-8">End Tally</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td className="col-1">03 May 2020</td>
-                        <td className="col-2">09:03am</td>
-                        <td className="col-3">10:05am</td>
-                        <td className="col-4">1hr 2min</td>
-                        <td className="col-5">Project Atlantica</td>
-                        <td className="col-6">Portfolio</td>
-                        <td className="col-7">Office</td>
-                        <td className="col-8">26hr 45min</td>
-                    </tr>
-                </tbody>
-            </table>
+            {sessions !== undefined ?
+                <table>
+                    <thead>
+                        <tr className="table-head">
+                            <th className="col-1">Date</th>
+                            <th className="col-2">Start Time</th>
+                            <th className="col-3">End Time</th>
+                            <th className="col-4">Total Time</th>
+                            <th className="col-5">Project</th>
+                            <th className="col-6">Project Type</th>
+                            <th className="col-7">Location</th>
+                            <th className="col-8">End Tally</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {sessions.map((session) => (
+                            <tr key={session.id}>
+                                <td className="col-1">{DateTime.fromISO(session.createdAt).toFormat("dd MMM yyyy")}</td>
+                                <td className="col-2">{DateTime.fromISO(session.createdAt).toFormat("t")}</td>
+                                <td className="col-3">{DateTime.fromISO(session.completedAt).toFormat("t")}</td>
+                                <td className="col-4">{convertToHrMins(session.timeSeconds)}</td>
+                                <td className="col-5">{session.project.name}</td>
+                                <td className="col-6">{session.projectType.name}</td>
+                                <td className="col-7">{session.location.name}</td>
+                                <td className="col-8">{convertToHrMins(session.endTally)}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+                :
+                <div>Loading...</div>
+            }
         </SessionLogStyles>
     )
 }
+
+export const GET_SESSIONS_QUERY = gql`
+query getSessions {
+    getSessions {
+        id
+        createdAt
+        completedAt
+        timeSeconds
+        project {
+            name
+        }
+        projectType {
+            name
+        }
+        location {
+            name
+        }
+        endTally
+    }
+}
+`;
 
 export default SessionLog;

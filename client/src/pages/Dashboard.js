@@ -25,29 +25,37 @@ function Dashboard() {
     };
 
     return (
-        <div>
-            <Navbar/>
-            <BodyContainer>
-                <h3>Your total deep work time</h3>
-                <TimerStyles>
-                <div className="time-display">{convertToHrMins(user.totalDwSeconds)}</div>
-                <div className="progress-bar-container">
-                    <p className="top-right-label">{user.nextMilestoneHr}h</p>
-                    <div className="percentage-bar">
-                        <ProgressBar percent={getPercent(user.totalDwSeconds)}/>
-                    </div>
-                    <p className="bottom-right-label">Your next milestone</p>
-                </div>
-                <UnderlineLink style={{"marginLeft": "0"}} onClick = {handleLogVisible}>
-                    { !logVisible ?
-                        "View your deep work log" :
-                        "Close your deep work log"
-                    }
-                </UnderlineLink>
-                { logVisible ? <SessionLog /> : <></> }
-                </TimerStyles>
-            </BodyContainer>
-        </div>
+            <div>
+                <Navbar/>
+                <BodyContainer>
+                { user ?
+                    <>
+                        <h3>Your total deep work time</h3>
+                        <TimerStyles>
+                        <div className="time-display">{convertToHrMins(user.totalDwSeconds)}</div>
+                        <div className="progress-bar-container">
+                            <p className="top-right-label">{user.nextMilestoneHr}h</p>
+                            <div className="percentage-bar">
+                                <ProgressBar percent={getPercent(user.totalDwSeconds)}/>
+                            </div>
+                            <p className="bottom-right-label">Your next milestone</p>
+                        </div>
+                        <UnderlineLink style={{"marginLeft": "0"}} onClick = {handleLogVisible}>
+                            { !logVisible ?
+                                "View your deep work log" :
+                                "Close your deep work log"
+                            }
+                        </UnderlineLink>
+                        { logVisible ? <SessionLog /> : <></> }
+                        </TimerStyles>
+                    </>
+                :
+                    <>
+                        <p>Please login</p>
+                    </>
+                }
+                </BodyContainer>
+            </div>
     );
 }
 

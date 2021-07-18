@@ -42,9 +42,9 @@ type Location {
 
 type Session {
     id: ID!
-    project: ID!
-    projectType: ID!
-    location: ID!
+    project: Project,
+    projectType: ProjectType!
+    location: Location!
     timeGoal: Int
     user: User!
     createdAt: String!
