@@ -2,9 +2,6 @@ const mongoose = require('mongoose');
 const { authenticateGoogle } = require('../../util/passport');
 
 const User = require('../../models/User');
-const Project = require('../../models/Project');
-const ProjectType = require('../../models/ProjectType');
-const Location = require('../../models/Location');
 
 const checkAuth = require('../../util/check-auth');
 const { updateTimeMilestone } = require('../../util/updateTimeMilestone');

@@ -4,6 +4,8 @@ import { GoogleLogin } from 'react-google-login';
 import { Link } from 'react-router-dom';
 
 import { AuthContext } from '../context/auth';
+import { CREATE_PROJECT_MUTATION, CREATE_PROJECT_TYPE_MUTATION, CREATE_LOCATION_MUTATION,
+         GET_PROJECTS_QUERY, GET_PROJECT_TYPES_QUERY, GET_LOCATIONS_QUERY } from '../util/graphql';
 
 import styled from 'styled-components';
 import Button from './styles/Button';
@@ -53,9 +55,50 @@ function Navbar() {
     const [authGoogle] = useMutation(AUTH_GOOGLE, {
         update(_, { data: userData }) {
             context.login(userData.authGoogle);
+
+            if ((new Date() - new Date(userData.authGoogle.createdAt)) < (5 * 60 * 6000)) {
+                console.log("NEW USER CREATED")
+                createProject({ variables: {name: "Default Project"} })
+                createProjectType({ variables: {name: "Default Project Type"} })
+                createLocation({ variables: {name: "Default Location"} })
+            };
         },
         onError(err) {
             console.log(err);
+        }
+    });
+
+    const [createProject] = useMutation(CREATE_PROJECT_MUTATION, {
+        update(proxy, result) {
+            const data = proxy.readQuery({
+                query: GET_PROJECTS_QUERY
+            });
+            var projects = [...data.getProjects]
+            projects = [result.data.createProject, ...data.getProjects];
+            proxy.writeQuery({ query: GET_PROJECTS_QUERY, data: { getProjects: projects } });
+
+        }
+    });
+
+    const [createProjectType] = useMutation(CREATE_PROJECT_TYPE_MUTATION, {
+        update(proxy, result) {
+            const data = proxy.readQuery({
+                query: GET_PROJECT_TYPES_QUERY
+            });
+            var projectTypes = [...data.getProjectTypes]
+            projectTypes = [result.data.createProjectType, ...data.getProjectTypes];
+            proxy.writeQuery({ query: GET_PROJECT_TYPES_QUERY, data: { getProjectTypes: projectTypes } });
+        }
+    });
+
+    const [createLocation] = useMutation(CREATE_LOCATION_MUTATION, {
+        update(proxy, result) {
+            const data = proxy.readQuery({
+                query: GET_LOCATIONS_QUERY
+            });
+            var locations = [...data.getLocations]
+            locations = [result.data.createLocation, ...data.getLocations];
+            proxy.writeQuery({ query: GET_LOCATIONS_QUERY, data: { getLocations: locations } });
         }
     });
 
@@ -99,6 +142,7 @@ const AUTH_GOOGLE = gql`
             email
             totalDwSeconds
             nextMilestoneHr
+            createdAt
             token
         }
     }
