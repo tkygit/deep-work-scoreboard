@@ -1,7 +1,9 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { gql, useMutation } from '@apollo/client';
 import { GoogleLogin } from 'react-google-login';
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faSignOutAlt } from '@fortawesome/free-solid-svg-icons'
 
 import { AuthContext } from '../context/auth';
 import { CREATE_PROJECT_MUTATION, CREATE_PROJECT_TYPE_MUTATION, CREATE_LOCATION_MUTATION,
@@ -45,12 +47,22 @@ const NavStyles = styled.div`
         padding: 0 10px;
         }
     }
+
+    .account-link {
+        padding-right: 1rem;
+    }
+
+    .icon {
+        margin: auto 0;
+    }
 `;
 
 function Navbar() {
     
     const context = useContext(AuthContext);
-    const { user, logout } = useContext(AuthContext);
+    const { user } = useContext(AuthContext);
+
+    const [loggedOut, setLoggedOut] = useState(false)
 
     const [authGoogle] = useMutation(AUTH_GOOGLE, {
         update(_, { data: userData }) {
@@ -106,15 +118,23 @@ function Navbar() {
         authGoogle({ variables: { accessToken: googleData.accessToken, expiresIn: googleData.tokenObj.expires_in } });
     };
 
+    const handleLogout = () => {
+        context.logout();
+        setLoggedOut(true);
+    }
+
     return (   
         <NavStyles>
+            {loggedOut && <Redirect to='/'/>}
             <div className="bar">
                 <a href={user ? "/dashboard" : "/"}><img src="/logo.svg" alt="Deep Work Scoreboard"/></a>
                 <div className="links-container">
                 { user ? 
                     <>
+                        <Link to="/dashboard">Dashboard</Link>
                         <Link to="/session"><Button>Start a deep work session</Button></Link>
-                        <Link to="/dashboard">{user.firstName} {user.lastName}</Link>
+                        <Link to="/account" className="account-link">{user.firstName} {user.lastName}</Link>
+                        <FontAwesomeIcon className="icon" icon={faSignOutAlt} onClick={handleLogout}/>
                     </>
                     :
                     <>
