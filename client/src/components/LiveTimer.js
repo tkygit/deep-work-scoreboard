@@ -12,7 +12,6 @@ function LiveTimer(props) {
     const [timer, setTimer] = useState(0);
     const [timerStart, setTimerStart] = useState(Date.now());
     const [isActive, setIsActive] = useState(true);
-    const [goalReached, setGoalReached] = useState(false);
     const timerRef = useRef(null);
 
     useEffect(() => {
@@ -46,7 +45,6 @@ function LiveTimer(props) {
         
         if (percent >= 100) {
             percent = 100;
-            setGoalReached(true);
         }
         return percent;
     };
@@ -64,7 +62,7 @@ function LiveTimer(props) {
                 <div className="percentage-bar">
                     <ProgressBar percent={getPercent}/>
                 </div>
-                <p className="bottom-right-label">{ goalReached ? "You reached your goal!" : "Session Goal" }</p>
+                <p className="bottom-right-label">{getPercent() >= 100 ? "You reached your goal!" : "Session Goal"}</p>
             </div>
             <Button className="timer-button" onClick={handleFinish}>Finish deep work session</Button>
             <UnderlineLink onClick={handlePause}>{ isActive ? "Pause session" : "Resume session" }</UnderlineLink>

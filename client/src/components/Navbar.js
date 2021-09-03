@@ -69,11 +69,12 @@ function Navbar() {
             context.login(userData.authGoogle);
 
             if ((new Date() - new Date(userData.authGoogle.createdAt)) < (5 * 60 * 6000)) {
-                console.log("NEW USER CREATED")
                 createProject({ variables: {name: "Default Project"} })
                 createProjectType({ variables: {name: "Default Project Type"} })
                 createLocation({ variables: {name: "Default Location"} })
             };
+
+            setLoggedOut(false);
         },
         onError(err) {
             console.log(err);
