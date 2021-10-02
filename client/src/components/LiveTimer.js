@@ -10,7 +10,7 @@ import { loadTimerState, saveTimerState } from '../util/timer';
 function LiveTimer(props) {
 
     const session = props.session.getSession;
-    const savedTimer = loadTimerState();
+    const savedTimer = loadTimerState(session.id);
     const [timer, setTimer] = useState(0);
     const [timerStart, setTimerStart] = useState(Date.now() - savedTimer);
     const [isActive, setIsActive] = useState(true);
@@ -20,13 +20,16 @@ function LiveTimer(props) {
         timerRef.current = setInterval(() => {
             const timerState = Date.now() - timerStart
             setTimer(timerState);
-            saveTimerState(timerState);
+            saveTimerState({
+                id: session.id,
+                time: timerState
+            });
         }, 1000);
 
         return () => {
             clearInterval(timerRef.current);
         }
-    }, [timerStart]);
+    }, [timerStart, session.id]);
 
     const handlePause = () => {
         if (isActive) {
@@ -39,7 +42,10 @@ function LiveTimer(props) {
     };
 
     const handleFinish = () => {
-        saveTimerState(0);
+        saveTimerState({
+            id: session.id,
+            time: 0
+        });;
         const timeSeconds = Math.floor(timer/1000);
         props.onFinish(timeSeconds);
     };

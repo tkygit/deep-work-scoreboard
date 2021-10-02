@@ -1,12 +1,13 @@
 const currTimer = "currTimer"
 
-export const loadTimerState = () => {
+export const loadTimerState = (sessionId) => {
   try {
-    const timerState = localStorage.getItem(currTimer)
-    if (timerState === null) {
+    const timerStateStr = localStorage.getItem(currTimer)
+    const timerState = JSON.parse(timerStateStr)
+    if (timerState.id !== sessionId) {
       return 0
     }
-    return timerState
+    return timerState.time
   } catch(err) {
     return 0
   }
@@ -14,7 +15,8 @@ export const loadTimerState = () => {
 
 export const saveTimerState = (timerState) => {
   try {
-    localStorage.setItem(currTimer, timerState)
+    const timerStateStr = JSON.stringify(timerState)
+    localStorage.setItem(currTimer, timerStateStr)
   } catch(err) {
     console.log("Error saving timer")
   }
