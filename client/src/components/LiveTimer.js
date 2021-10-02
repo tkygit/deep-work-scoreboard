@@ -5,18 +5,22 @@ import Button from './styles/Button';
 import { UnderlineLink } from './styles/Link';
 
 import convertToHrMins from '../util/time';
+import { loadTimerState, saveTimerState } from '../util/timer';
 
 function LiveTimer(props) {
 
     const session = props.session.getSession;
+    const savedTimer = loadTimerState();
     const [timer, setTimer] = useState(0);
-    const [timerStart, setTimerStart] = useState(Date.now());
+    const [timerStart, setTimerStart] = useState(Date.now() - savedTimer);
     const [isActive, setIsActive] = useState(true);
     const timerRef = useRef(null);
 
     useEffect(() => {
         timerRef.current = setInterval(() => {
-            setTimer(Date.now() - timerStart);
+            const timerState = Date.now() - timerStart
+            setTimer(timerState);
+            saveTimerState(timerState);
         }, 1000);
 
         return () => {
@@ -35,6 +39,7 @@ function LiveTimer(props) {
     };
 
     const handleFinish = () => {
+        saveTimerState(0);
         const timeSeconds = Math.floor(timer/1000);
         props.onFinish(timeSeconds);
     };
