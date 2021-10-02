@@ -15,7 +15,10 @@ module.exports = {
                 location,
                 timeGoal,
                 user: user.id,
-                createdAt: new Date().toISOString()
+                createdAt: new Date().toISOString(),
+                completedAt: "",
+                timeSeconds: 0,
+                endTally: 0
             });
 
             const session = await newSession.save();

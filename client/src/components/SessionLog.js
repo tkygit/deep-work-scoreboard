@@ -1,4 +1,3 @@
-import React, { useState } from 'react';
 import styled from 'styled-components';
 import { gql, useQuery } from '@apollo/client';
 import { DateTime } from 'luxon';
@@ -66,7 +65,7 @@ function SessionLog() {
                             <tr key={session.id}>
                                 <td className="col-1">{DateTime.fromISO(session.createdAt).toFormat("dd MMM yyyy")}</td>
                                 <td className="col-2">{DateTime.fromISO(session.createdAt).toFormat("t")}</td>
-                                <td className="col-3">{DateTime.fromISO(session.completedAt).toFormat("t")}</td>
+                                <td className="col-3">{session.completedAt !== "" ? DateTime.fromISO(session.completedAt).toFormat("t") : "-"}</td>
                                 <td className="col-4">{convertToHrMins(session.timeSeconds)}</td>
                                 <td className="col-5">{session.project.name}</td>
                                 <td className="col-6">{session.projectType.name}</td>
@@ -77,7 +76,7 @@ function SessionLog() {
                     </tbody>
                 </table>
                 :
-                <div>Loading...</div>
+                <div>No sessions to show</div>
             }
         </SessionLogStyles>
     )
