@@ -160,9 +160,6 @@ const AUTH_GOOGLE = gql`
             id
             firstName
             lastName
-            email
-            totalDwSeconds
-            nextMilestoneHr
             createdAt
             token
         }

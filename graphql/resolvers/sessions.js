@@ -8,17 +8,18 @@ module.exports = {
     Mutation: {
         async createSession(_, { project, projectType, location, timeGoal }, context) {
             const user = checkAuth(context);
+            const currUser = await User.findOne({ '_id': user.id });
 
             const newSession = new Session({
                 project,
                 projectType,
                 location,
                 timeGoal,
-                user: user.id,
+                user: currUser.id,
                 createdAt: new Date().toISOString(),
                 completedAt: "",
                 timeSeconds: 0,
-                endTally: 0
+                endTally: currUser.totalDwSeconds,
             });
 
             const session = await newSession.save();

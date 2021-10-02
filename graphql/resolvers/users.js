@@ -5,6 +5,7 @@ const User = require('../../models/User');
 
 const checkAuth = require('../../util/check-auth');
 const { updateTimeMilestone } = require('../../util/updateTimeMilestone');
+const { UserInputError } = require('apollo-server-errors');
 
 module.exports = {
     Mutation: {
@@ -83,5 +84,21 @@ module.exports = {
 
             return updatedTimeMilestone;
         },
+    },
+    Query: {
+        async getUserStats(_, { id }, context) {
+            const user = checkAuth(context);
+
+            try {
+                const foundUser = await User.findOne({ '_id': id });
+                return {
+                    id: foundUser.id,
+                    totalDwSeconds: foundUser.totalDwSeconds,
+                    nextMilestoneHr: foundUser.nextMilestoneHr
+                };
+            } catch (err) {
+                throw new Error(err);
+            }
+        }      
     }
 };

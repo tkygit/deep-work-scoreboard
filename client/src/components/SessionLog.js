@@ -66,7 +66,7 @@ function SessionLog() {
                                 <td className="col-1">{DateTime.fromISO(session.createdAt).toFormat("dd MMM yyyy")}</td>
                                 <td className="col-2">{DateTime.fromISO(session.createdAt).toFormat("t")}</td>
                                 <td className="col-3">{session.completedAt !== "" ? DateTime.fromISO(session.completedAt).toFormat("t") : "-"}</td>
-                                <td className="col-4">{convertToHrMins(session.timeSeconds)}</td>
+                                <td className="col-4">{session.timeSeconds !== 0 ? convertToHrMins(session.timeSeconds) : "-"}</td>
                                 <td className="col-5">{session.project.name}</td>
                                 <td className="col-6">{session.projectType.name}</td>
                                 <td className="col-7">{session.location.name}</td>
@@ -82,25 +82,25 @@ function SessionLog() {
     )
 }
 
-export const GET_SESSIONS_QUERY = gql`
-query getSessions {
-    getSessions {
-        id
-        createdAt
-        completedAt
-        timeSeconds
-        project {
-            name
+const GET_SESSIONS_QUERY = gql`
+    query getSessions {
+        getSessions {
+            id
+            createdAt
+            completedAt
+            timeSeconds
+            project {
+                name
+            }
+            projectType {
+                name
+            }
+            location {
+                name
+            }
+            endTally
         }
-        projectType {
-            name
-        }
-        location {
-            name
-        }
-        endTally
     }
-}
 `;
 
 export default SessionLog;

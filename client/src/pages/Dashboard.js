@@ -1,4 +1,5 @@
 import React, { useContext, useState } from 'react';
+import { gql, useQuery } from '@apollo/client';
 
 import Navbar from '../components/Navbar';
 import SessionLog from '../components/SessionLog';
@@ -14,10 +15,14 @@ function Dashboard() {
     const { user } = useContext(AuthContext);
     const [ logVisible, setLogVisible ] = useState(false);
 
+    const { loading, error, data: { getUserStats: userStats } = {} } = useQuery(GET_USER_STATS_QUERY, {
+        variables: { id: user ? user.id : null}
+    });
+
     const getPercent = (currSeconds) => {
         const currHour = Math.floor(currSeconds / 3600);
 
-        return (currHour / user.nextMilestoneHr) * 100;
+        return (currHour / userStats.nextMilestoneHr) * 100;
     };
 
     const handleLogVisible = () => {
@@ -28,15 +33,15 @@ function Dashboard() {
             <div>
                 <Navbar/>
                 <BodyContainer>
-                { user ?
+                { user && !loading ?
                     <>
                         <h3>Your total deep work time</h3>
                         <TimerStyles>
-                        <div className="time-display">{convertToHrMins(user.totalDwSeconds)}</div>
+                        <div className="time-display">{convertToHrMins(userStats.totalDwSeconds)}</div>
                         <div className="progress-bar-container">
-                            <p className="top-right-label">{user.nextMilestoneHr}h</p>
+                            <p className="top-right-label">{userStats.nextMilestoneHr}h</p>
                             <div className="percentage-bar">
-                                <ProgressBar percent={getPercent(user.totalDwSeconds)}/>
+                                <ProgressBar percent={getPercent(userStats.totalDwSeconds)}/>
                             </div>
                             <p className="bottom-right-label">Your next milestone</p>
                         </div>
@@ -58,5 +63,15 @@ function Dashboard() {
             </div>
     );
 }
+
+const GET_USER_STATS_QUERY = gql`
+    query getUserStats($id: ID!) {
+        getUserStats(id: $id) {
+            id,
+            totalDwSeconds
+            nextMilestoneHr
+        }
+    }
+    `;
 
 export default Dashboard;

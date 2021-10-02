@@ -62,6 +62,7 @@ type Query {
     getProject(id: ID!): Project
     getProjectType(id: ID!): ProjectType
     getSession(id: ID!): Session
+    getUserStats(id: ID!): User
 }
 
 type Mutation {

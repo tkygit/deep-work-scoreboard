@@ -28,9 +28,7 @@ userSchema.methods.generateJWT = function (expiresInSecs) {
         email: this.email,
         id: this._id,
         firstName: this.firstName,
-        lastName: this.lastName,
-        nextMilestoneHr: this.nextMilestoneHr,
-        totalDwSeconds: this.totalDwSeconds
+        lastName: this.lastName
     }, SECRET_KEY, { expiresIn: expiresInSecs });
 }
 
