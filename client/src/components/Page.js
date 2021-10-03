@@ -4,6 +4,7 @@ import styled, { ThemeProvider, createGlobalStyle } from 'styled-components';
 const theme = {
   navy: '#000333',
   blue: '#94BDFE',
+  black: '#06082B',
   mobileWidth: '480px',
   tabletWidth: '768px',
   desktopWidth: '1024px',
@@ -58,12 +59,12 @@ const GlobalStyle = createGlobalStyle`
     }
   }
   h2 {
-    font-size: 4rem;
+    font-size: 3.2rem;
     font-family: 'IBM Plex Sans', sans-serif;
     font-weight: 700;
   }
   h3 {
-    font-size: 2.8rem;
+    font-size: 2.4rem;
     font-family: 'IBM Plex Sans', sans-serif;
     font-weight: 700;
   }
