@@ -27,10 +27,14 @@ function StartSession(props) {
         }
     };
 
+    const { loading, error, data: { getLastSessionDetails: lastSession } = {} } = useQuery(GET_LAST_SESSION_DETAILS, {
+        variables: { userId: user ? user.id : null}
+    });
+
     const { onChange, onUpdate, onSubmit, values } = useForm(startSessionCallback, { 
-        'project': '',
-        'project_type': '',
-        'location': ''
+        'project': lastSession ? lastSession.lastProject.id : "",
+        'project_type': lastSession ? lastSession.lastProjectType.id : "",
+        'location': lastSession ? lastSession.lastLocation.id : ""
     });
 
     function startSessionCallback() {
@@ -50,10 +54,6 @@ function StartSession(props) {
         })
     }
 
-    const { loading, error, data: { getLastSessionDetails: lastSession } = {} } = useQuery(GET_LAST_SESSION_DETAILS, {
-        variables: { userId: user ? user.id : null}
-    });
-
     const [createSession] = useMutation(CREATE_SESSION_MUTATION, {
         update(_, { data }) {
             props.history.push(`session/${data.createSession.id}`)
@@ -72,9 +72,9 @@ function StartSession(props) {
                 { user ? 
                     <form onSubmit={onSubmit}>
                         <h3>Start a new deep work session</h3>
-                        <FormField type="Project" onFieldChange={onChange} onFieldUpdate={onUpdate} defaultValue={lastSession ? lastSession.lastProject : null}/>
-                        <FormField type="Project Type" onFieldChange={onChange} onFieldUpdate={onUpdate} defaultValue={lastSession ? lastSession.lastProjectType : null}/>
-                        <FormField type="Location" onFieldChange={onChange} onFieldUpdate={onUpdate} defaultValue={lastSession ? lastSession.lastLocation : null}/>
+                        <FormField type="Project" onFieldChange={onChange} onFieldUpdate={onUpdate} defaultValue={lastSession ? lastSession.lastProject.id : null}/>
+                        <FormField type="Project Type" onFieldChange={onChange} onFieldUpdate={onUpdate} defaultValue={lastSession ? lastSession.lastProjectType.id : null}/>
+                        <FormField type="Location" onFieldChange={onChange} onFieldUpdate={onUpdate} defaultValue={lastSession ? lastSession.lastLocation.id : null}/>
                         <FormFieldStyles>
                             <label>Time goal</label>
                             <input type="number" name="hourGoal" onChange={timeGoalChange} className="field-box number-field"></input><p className="time-label">hour/s</p>
