@@ -75,22 +75,23 @@ function FormField(props) {
         variables: values
     });
 
-    function addItemCallback() {
+    async function addItemCallback() {
         switch(fieldType) {
             case "Project":
-                createProject();
+                await createProject();
                 break;
             case "Project Type":
-                createProjectType();
+                await createProjectType();
                 break;
             case "Location":
-                createLocation();
+                await createLocation();
                 break;
             default:
                 break;
         }
         closeModal();
-        selectDropdown(fieldType + "Dropdown", items[0]);
+        selectDropdown(fieldType + "Dropdown", items[0].id, items[0].name);
+        props.onFieldUpdate(fieldType.toLowerCase().replace(" ", "_"), items[0].id);
     };
 
     return (
@@ -102,7 +103,7 @@ function FormField(props) {
                     id={fieldType + "Dropdown"} 
                     name={fieldType.toLowerCase().replace(" ", "_")} 
                     onChange={props.onFieldChange}
-                    defaultValue={"instruction"}
+                    defaultValue={props.defaultValue !== null ? props.defaultValue : "instruction"}
                     className="field-box"
                 >
                     <option disabled hidden value="instruction">Select {fieldType.toLowerCase()}</option>

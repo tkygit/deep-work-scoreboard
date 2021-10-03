@@ -7,7 +7,7 @@ import { faSignOutAlt } from '@fortawesome/free-solid-svg-icons'
 
 import { AuthContext } from '../context/auth';
 import { CREATE_PROJECT_MUTATION, CREATE_PROJECT_TYPE_MUTATION, CREATE_LOCATION_MUTATION,
-         GET_PROJECTS_QUERY, GET_PROJECT_TYPES_QUERY, GET_LOCATIONS_QUERY } from '../util/graphql';
+         GET_PROJECTS_QUERY, GET_PROJECT_TYPES_QUERY, GET_LOCATIONS_QUERY, UPDATE_USER_LAST_SESSION } from '../util/graphql';
 
 import styled from 'styled-components';
 import Button from './styles/Button';
@@ -65,13 +65,20 @@ function Navbar() {
     const [loggedOut, setLoggedOut] = useState(false)
 
     const [authGoogle] = useMutation(AUTH_GOOGLE, {
-        update(_, { data: userData }) {
+        async update(_, { data: userData }) {
             context.login(userData.authGoogle);
 
             if ((new Date() - new Date(userData.authGoogle.createdAt)) < (5 * 60 * 6000)) {
-                createProject({ variables: {name: "Default Project"} })
-                createProjectType({ variables: {name: "Default Project Type"} })
-                createLocation({ variables: {name: "Default Location"} })
+                const { data: { createProject: defaultProject } }  = await createProject({ variables: {name: "Default Project"} })
+                const { data: { createProjectType: defaultProjectType } }= await createProjectType({ variables: {name: "Default Project Type"} })
+                const { data: { createLocation: defaultLocation } } = await createLocation({ variables: {name: "Default Location"} })
+                updateLastSessionDetails({ 
+                    variables: {
+                        project: defaultProject.id, 
+                        projectType: defaultProjectType.id, 
+                        location: defaultLocation.id
+                    }
+                })
             };
 
             setLoggedOut(false);
@@ -114,6 +121,8 @@ function Navbar() {
             proxy.writeQuery({ query: GET_LOCATIONS_QUERY, data: { getLocations: locations } });
         }
     });
+
+    const [updateLastSessionDetails] = useMutation(UPDATE_USER_LAST_SESSION);
 
     const handleLogin = googleData => {
         authGoogle({ variables: { accessToken: googleData.accessToken, expiresIn: googleData.tokenObj.expires_in } });

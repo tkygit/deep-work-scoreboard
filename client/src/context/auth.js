@@ -10,6 +10,7 @@ if (localStorage.getItem('token')) {
 
     if (decodedToken.exp * 1000 < Date.now()) {
         localStorage.removeItem('token');
+        localStorage.removeItem('currTimer');
         // call APi to refresh the token using the user's refresh token (stored in server)
         // update token in localStorage with new expiry time
     } else {
@@ -52,6 +53,8 @@ function AuthProvider(props) {
     }
 
     function logout() {
+        localStorage.removeItem('token');
+        localStorage.removeItem('currTimer');
         dispatch({ type: 'LOGOUT' });
     }
 

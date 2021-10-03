@@ -7,19 +7,26 @@ export const useForm = (callback, initialState = {}) => {
         setValues({ ...values, [e.target.name]: e.target.value });
     };
 
+    const onUpdate = (name, value) => {
+        setValues({ ...values, [name]: value });
+    }
+
     const onSubmit = (e) => {
         e.preventDefault();
+        e.stopPropagation();
         callback();
     };
 
     return {
         onChange,
+        onUpdate,
         onSubmit,
         values
     };
 };
 
-export const selectDropdown = (id, value) => {    
+export const selectDropdown = (id, valueId, valueName) => {
     var item = document.getElementById(id);
-    item.value = value;
+    item.value = valueId;
+    item.name = valueName;
 }

@@ -12,7 +12,7 @@ module.exports = {
                 throw new Error('Location name must not be empty');
             }
 
-            const foundLocation = await Location.findOne({ 'name': name });
+            const foundLocation = await Location.findOne({ 'name': name, 'user': user.id });
 
             if (!foundLocation) {
                 const newLocation = new Location({

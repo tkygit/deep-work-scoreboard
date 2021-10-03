@@ -12,7 +12,7 @@ module.exports = {
                 throw new Error('Project name must not be empty');
             }
 
-            const foundProject = await Project.findOne({ 'name': name });
+            const foundProject = await Project.findOne({ 'name': name, 'user': user.id });
 
             if (!foundProject) {
                 const newProject = new Project({

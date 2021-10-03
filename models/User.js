@@ -14,6 +14,18 @@ const userSchema = new Schema({
     lastName: String,
     totalDwSeconds: Number,
     nextMilestoneHr: Number,
+    lastProject: {
+        type: Schema.Types.ObjectId,
+        ref: 'Project'   
+    },
+    lastProjectType: {
+        type: Schema.Types.ObjectId,
+        ref: 'ProjectType'   
+    },
+    lastLocation: {
+        type: Schema.Types.ObjectId,
+        ref: 'Location'
+    },
     projectMilestones: [
         {
             type: Schema.Types.ObjectId,

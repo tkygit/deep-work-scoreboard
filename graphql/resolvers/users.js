@@ -84,6 +84,30 @@ module.exports = {
 
             return updatedTimeMilestone;
         },
+        async updateLastSessionDetails(_, {project, projectType, location}, context) {
+            const user = checkAuth(context);
+
+            try {
+                await User.updateOne(
+                    { _id: user.id },
+                    { $set: { 
+                        "lastProject" : project,
+                        "lastProjectType" : projectType,
+                        "lastLocation": location
+                        }
+                    }
+                );
+
+            } catch (e) {
+                throw new Error("Unable to update user's last session details: " + e);
+            }
+
+            return { 
+                "lastProject" : project,
+                "lastProjectType" : projectType,
+                "lastLocation": location
+            };
+        }
     },
     Query: {
         async getUserStats(_, { id }, context) {
@@ -95,6 +119,24 @@ module.exports = {
                     id: foundUser.id,
                     totalDwSeconds: foundUser.totalDwSeconds,
                     nextMilestoneHr: foundUser.nextMilestoneHr
+                };
+            } catch (err) {
+                throw new Error(err);
+            }
+        },
+        async getLastSessionDetails(_, { id }, context) {
+            const user = checkAuth(context);
+
+            try {
+                const foundUser = await User.findOne({ '_id': id })
+                                            .populate('lastProject')
+                                            .populate('lastProjectType')
+                                            .populate('lastLocation');
+                return {
+                    id: foundUser.id,
+                    lastProject: foundUser.lastProject,
+                    lastProjectType: foundUser.lastProjectType,
+                    lastLocation: foundUser.lastLocation
                 };
             } catch (err) {
                 throw new Error(err);

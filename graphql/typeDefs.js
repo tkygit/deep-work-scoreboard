@@ -11,6 +11,9 @@ type User {
     nextMilestoneHr: Int!
     createdAt: String!
     token: String!
+    lastProject: Project,
+    lastProjectType: ProjectType,
+    lastLocation: Location
 }
 
 input AuthInput {
@@ -42,7 +45,7 @@ type Location {
 
 type Session {
     id: ID!
-    project: Project,
+    project: Project
     projectType: ProjectType!
     location: Location!
     timeGoal: Int
@@ -51,6 +54,12 @@ type Session {
     completedAt: String!
     timeSeconds: Int
     endTally: Int
+}
+
+type SessionDetails {
+    lastProject: ID!
+    lastProjectType: ID!
+    lastLocation: ID!
 }
 
 type Query {
@@ -63,6 +72,7 @@ type Query {
     getProjectType(id: ID!): ProjectType
     getSession(id: ID!): Session
     getUserStats(id: ID!): User
+    getLastSessionDetails(id: ID!): User
 }
 
 type Mutation {
@@ -75,5 +85,6 @@ type Mutation {
     addProjectTime(project: ID!, seconds: Int!): Int!
     addDwTime(seconds: Int!): Int!
     updateNextMilestoneHr: Int!
+    updateLastSessionDetails(project: ID!, projectType: ID!, location: ID!): SessionDetails!
 }
 `

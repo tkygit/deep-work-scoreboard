@@ -1,7 +1,7 @@
 import gql from 'graphql-tag';
 
 export const GET_PROJECTS_QUERY = gql`
-{
+query getProjects {
     getProjects {
         id,
         name
@@ -10,7 +10,7 @@ export const GET_PROJECTS_QUERY = gql`
 `;
 
 export const GET_PROJECT_TYPES_QUERY = gql`
-{
+query getProjectTypes {
     getProjectTypes {
         id,
         name
@@ -19,7 +19,7 @@ export const GET_PROJECT_TYPES_QUERY = gql`
 `;
 
 export const GET_LOCATIONS_QUERY = gql`
-{
+query getLocations {
     getLocations {
         id,
         name
@@ -80,6 +80,16 @@ query getProject($id: ID!) {
         id,
         name
         totalProjectTime
+    }
+}
+`;
+
+export const UPDATE_USER_LAST_SESSION = gql ` 
+mutation updateLastSessionDetails ($project: ID!, $projectType: ID!, $location: ID!) { 
+    updateLastSessionDetails(project: $project, projectType: $projectType, location: $location) {
+        lastProject
+    	lastProjectType
+    	lastLocation
     }
 }
 `;
