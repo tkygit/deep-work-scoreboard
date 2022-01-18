@@ -1,7 +1,7 @@
 import gql from 'graphql-tag';
 import styled from 'styled-components'
 import React from 'react';
-import { useMutation } from '@apollo/client';
+import { useMutation, useQuery } from '@apollo/client';
 
 import Navbar from '../components/Navbar'
 import Button from '../components/styles/Button';
@@ -55,6 +55,8 @@ const AccountStyles = styled.div`
 
 function Account() {
 
+    const { loading, error, data: { getAccountDetails: accountDetails } = {} } = useQuery(GET_ACCOUNT_DETAILS);
+
     const [removeSessions] = useMutation(REMOVE_USER_SESSIONS);
     const [removeLocation] = useMutation(REMOVE_USER_LOCATIONS);
     const [removeProjectTypes] = useMutation(REMOVE_USER_PROJECT_TYPES);
@@ -73,15 +75,35 @@ function Account() {
         await removeUser();
     }
 
+    // const { onChange, onSubmit, values } = useForm(editItemCallback, { name: '' });
+
+    // async function editItemCallback() {
+    //     switch(fieldType) {
+    //         case "Project":
+    //             await createProject();
+    //             break;
+    //         case "Project Type":
+    //             await createProjectType();
+    //             break;
+    //         case "Location":
+    //             await createLocation();
+    //             break;
+    //         default:
+    //             break;
+    //     }
+    // };
+
     return (
         <AccountStyles>
             <Navbar/>
             <BodyContainer>
+            { !loading ?
+            <>
                 <h3>My account</h3>
                 <form>
-                    <AccountDetail label="Email address" value="teresakypham@gmail.com" readOnly={true}/><span className="email-disclaimer">You are using your Google account to use this app. This cannot be changed.</span>
-                    <AccountDetail label="First name" value="Teresa" readOnly={false}/>
-                    <AccountDetail label="Last name" value="Pham" readOnly={false}/>
+                    <AccountDetail label="Email address" value={accountDetails.email} readOnly={true}/><span className="email-disclaimer">You are using your Google account to use this app. This cannot be changed.</span>
+                    <AccountDetail label="First name" value={accountDetails.firstName} readOnly={false}/>
+                    <AccountDetail label="Last name" value={accountDetails.lastName} readOnly={false}/>
                     <h4 className="subheading">Deep work data</h4>
                     {/* TO DO: List projects, project types and location with a delete button for each item */}
                     <Button className="save-button button">Save my details</Button>
@@ -89,6 +111,12 @@ function Account() {
                 <h4 className="subheading">Danger Zone</h4>
                 <div className="button-wrapper"><Button className="reset-button button" onClick={handleResetAccount}>Reset data</Button><span className="warning">Warning! This will delete all your current deep work data.</span></div>
                 <div className="button-wrapper"><Button className="delete-button button" onClick={handleDeleteAccount}>Delete Account</Button><span className="warning">Warning! This will delete your account and any associated data.</span></div>
+            </>
+            :
+            <>
+                <p>Please wait...</p>
+            </>
+            }
             </BodyContainer>
         </AccountStyles>
     );
@@ -98,6 +126,16 @@ const REMOVE_USER = gql `
     mutation removeUser { 
         removeUser {
             ok
+        }
+    }
+`;
+
+const GET_ACCOUNT_DETAILS = gql ` 
+    query getAccountDetails { 
+        getAccountDetails {
+            email,
+            firstName,
+            lastName
         }
     }
 `;
