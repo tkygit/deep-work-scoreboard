@@ -27,6 +27,17 @@ module.exports = {
             } else {
                 return foundProjectType;
             }
+        },
+        async removeUserProjectTypes(_, {}, context) {
+            const user = checkAuth(context);
+            try {
+                const date = new Date()
+                const expireDate = date.setDate(date.getDate() + 7);
+
+                return await ProjectType.updateMany({'user': user.id}, { $set: { expireAt: expireDate } });
+            } catch (err) {
+                throw new Error(err);
+            }
         }
     },
     Query: {
@@ -34,7 +45,7 @@ module.exports = {
             const user = checkAuth(context);
 
             try {
-                const projectTypes = await ProjectType.find({ 'user': user.id }).sort({ createdAt: -1 });
+                const projectTypes = await ProjectType.find({ 'user': user.id, 'expireAt': null }).sort({ createdAt: -1 });
                 return projectTypes;
             } catch (err) {
                 throw new Error(err);

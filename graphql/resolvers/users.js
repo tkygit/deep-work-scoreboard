@@ -107,14 +107,25 @@ module.exports = {
                 "lastProjectType" : projectType,
                 "lastLocation": location
             };
+        },
+        async removeUser(_, {}, context) {
+            const user = checkAuth(context);
+            try {
+                const date = new Date()
+                const expireDate = date.setDate(date.getDate() + 7);
+
+                return await User.updateOne({'_id': user.id}, { $set: { expireAt: expireDate } });
+            } catch (err) {
+                throw new Error(err);
+            }
         }
     },
     Query: {
-        async getUserStats(_, { id }, context) {
+        async getUserStats(_, {}, context) {
             const user = checkAuth(context);
 
             try {
-                const foundUser = await User.findOne({ '_id': id });
+                const foundUser = await User.findOne({ '_id': user.id });
                 return {
                     id: foundUser.id,
                     totalDwSeconds: foundUser.totalDwSeconds,
@@ -124,11 +135,11 @@ module.exports = {
                 throw new Error(err);
             }
         },
-        async getLastSessionDetails(_, { id }, context) {
+        async getLastSessionDetails(_, {}, context) {
             const user = checkAuth(context);
 
             try {
-                const foundUser = await User.findOne({ '_id': id })
+                const foundUser = await User.findOne({ '_id': user.id })
                                             .populate('lastProject')
                                             .populate('lastProjectType')
                                             .populate('lastLocation');
@@ -141,6 +152,21 @@ module.exports = {
             } catch (err) {
                 throw new Error(err);
             }
-        }      
+        },
+        async getAccountDetails(_, {}, context) {
+            const user = checkAuth(context);
+
+            try {
+                const foundUser = await User.findOne({ '_id': user.id });
+                return {
+                    id: foundUser.id,
+                    email: foundUser.email,
+                    firstName: foundUser.firstName,
+                    lastName: foundUser.lastName
+                };
+            } catch (err) {
+                throw new Error(err);
+            }
+        },
     }
 };

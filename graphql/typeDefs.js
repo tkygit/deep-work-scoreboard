@@ -27,6 +27,7 @@ type Project {
     user: User!
     createdAt: String!
     totalProjectTime: Int!
+    expireAt: String
 }
 
 type ProjectType {
@@ -34,6 +35,7 @@ type ProjectType {
     name: String!
     user: User!
     createdAt: String!
+    expireAt: String
 }
 
 type Location {
@@ -41,6 +43,7 @@ type Location {
     name: String!
     user: User!
     createdAt: String!
+    expireAt: String
 }
 
 type Session {
@@ -54,12 +57,18 @@ type Session {
     completedAt: String!
     timeSeconds: Int
     endTally: Int
+    expireAt: String
 }
 
 type SessionDetails {
     lastProject: ID!
     lastProjectType: ID!
     lastLocation: ID!
+}
+
+type AcknowledgeDeletion {
+    ok: Boolean!
+    nModified: Int!
 }
 
 type Query {
@@ -71,8 +80,9 @@ type Query {
     getProject(id: ID!): Project
     getProjectType(id: ID!): ProjectType
     getSession(id: ID!): Session
-    getUserStats(id: ID!): User
-    getLastSessionDetails(id: ID!): User
+    getUserStats: User
+    getLastSessionDetails: User
+    getAccountDetails: User
 }
 
 type Mutation {
@@ -86,5 +96,10 @@ type Mutation {
     addDwTime(seconds: Int!): Int!
     updateNextMilestoneHr: Int!
     updateLastSessionDetails(project: ID!, projectType: ID!, location: ID!): SessionDetails!
+    removeUserSessions: AcknowledgeDeletion!
+    removeUserProjects: AcknowledgeDeletion!
+    removeUserProjectTypes: AcknowledgeDeletion!
+    removeUserLocations: AcknowledgeDeletion!
+    removeUser: AcknowledgeDeletion!
 }
 `

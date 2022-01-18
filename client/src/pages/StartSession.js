@@ -27,9 +27,7 @@ function StartSession(props) {
         }
     };
 
-    const { loading, error, data: { getLastSessionDetails: lastSession } = {} } = useQuery(GET_LAST_SESSION_DETAILS, {
-        variables: { userId: user ? user.id : null}
-    });
+    const { loading, error, data: { getLastSessionDetails: lastSession } = {} } = useQuery(GET_LAST_SESSION_DETAILS);
 
     const { onChange, onUpdate, onSubmit, values } = useForm(startSessionCallback, { 
         'project': lastSession ? lastSession.lastProject.id : "",
@@ -101,8 +99,8 @@ const CREATE_SESSION_MUTATION = gql`
 `;
 
 const GET_LAST_SESSION_DETAILS = gql`
-    query getLastSessionDetails($userId: ID!) {
-        getLastSessionDetails(id: $userId) {
+    query getLastSessionDetails {
+        getLastSessionDetails {
             lastProject {
                 id
             }

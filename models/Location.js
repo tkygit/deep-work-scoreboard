@@ -6,7 +6,13 @@ const locationSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'users'
     },
-    createdAt: String,
+    createdAt: Date,
+    expireAt: {
+        type: Date,
+        default: null
+    }
 });
+
+locationSchema.index({ expireAt: 1}, {expireAfterSeconds: 0})
 
 module.exports = model ('Location', locationSchema);

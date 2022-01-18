@@ -21,7 +21,13 @@ const sessionSchema = new Schema({
     createdAt: String,
     completedAt: String,
     timeSeconds: Number,
-    endTally: Number
+    endTally: Number,
+    expireAt: {
+        type: Date,
+        default: null
+    }
 });
+
+sessionSchema.index({ expireAt: 1}, {expireAfterSeconds: 0})
 
 module.exports = model ('Session', sessionSchema);

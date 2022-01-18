@@ -49,13 +49,24 @@ module.exports = {
                 throw new Error("Unable to find project to update");
             }
         },
+        async removeUserProjects(_, {}, context) {
+            const user = checkAuth(context);
+            try {
+                const date = new Date()
+                const expireDate = date.setDate(date.getDate() + 7);
+
+                return await Project.updateMany({'user': user.id}, { $set: { expireAt: expireDate } });
+            } catch (err) {
+                throw new Error(err);
+            }
+        }
     },
     Query: {
         async getProjects(_, {}, context) {
             const user = checkAuth(context);
 
             try {
-                const projects = await Project.find({ 'user': user.id }).sort({ createdAt: -1 });
+                const projects = await Project.find({ 'user': user.id, 'expireAt': null }).sort({ createdAt: -1 });
                 return projects;
             } catch (err) {
                 throw new Error(err);

@@ -6,8 +6,14 @@ const projectSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'users'
     },
-    createdAt: String,
-    totalProjectTime: Number
+    createdAt: Date,
+    totalProjectTime: Number,
+    expireAt: {
+        type: Date,
+        default: null
+    }
 });
+
+projectSchema.index({ expireAt: 1}, {expireAfterSeconds: 0})
 
 module.exports = model ('Project', projectSchema);

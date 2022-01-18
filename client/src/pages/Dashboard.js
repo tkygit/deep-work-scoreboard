@@ -15,9 +15,7 @@ function Dashboard() {
     const { user } = useContext(AuthContext);
     const [ logVisible, setLogVisible ] = useState(false);
 
-    const { loading, error, data: { getUserStats: userStats } = {} } = useQuery(GET_USER_STATS_QUERY, {
-        variables: { id: user ? user.id : null}
-    });
+    const { loading, error, data: { getUserStats: userStats } = {} } = useQuery(GET_USER_STATS_QUERY);
 
     const getPercent = (currSeconds) => {
         const currHour = Math.floor(currSeconds / 3600);
@@ -65,8 +63,8 @@ function Dashboard() {
 }
 
 const GET_USER_STATS_QUERY = gql`
-    query getUserStats($id: ID!) {
-        getUserStats(id: $id) {
+    query getUserStats {
+        getUserStats {
             id,
             totalDwSeconds
             nextMilestoneHr

@@ -94,3 +94,34 @@ mutation updateLastSessionDetails ($project: ID!, $projectType: ID!, $location: 
 }
 `;
 
+export const REMOVE_USER_SESSIONS = gql ` 
+mutation removeUserSessions { 
+    removeUserSessions {
+        ok
+    }
+}
+`;
+
+export const REMOVE_USER_LOCATIONS = gql ` 
+mutation removeUserLocations { 
+    removeUserLocations {
+        ok
+    }
+}
+`;
+
+export const REMOVE_USER_PROJECT_TYPES = gql ` 
+mutation removeUserProjectTypes { 
+    removeUserProjectTypes {
+        ok
+    }
+}
+`;
+
+export const REMOVE_USER_PROJECTS = gql ` 
+mutation removeUserProjects { 
+    removeUserProjects {
+        ok
+    }
+}
+`;

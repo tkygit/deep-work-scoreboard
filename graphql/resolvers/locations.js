@@ -27,6 +27,17 @@ module.exports = {
             } else {
                 return foundLocation;
             }
+        },
+        async removeUserLocations(_, {}, context) {
+            const user = checkAuth(context);
+            try {
+                const date = new Date()
+                const expireDate = date.setDate(date.getDate() + 7);
+
+                return await Location.updateMany({'user': user.id}, { $set: { expireAt: expireDate } });
+            } catch (err) {
+                throw new Error(err);
+            }
         }
     },
     Query: {
@@ -34,7 +45,7 @@ module.exports = {
             const user = checkAuth(context);
 
             try {
-                const locations = await Location.find({ 'user': user.id }).sort({ createdAt: -1 });
+                const locations = await Location.find({ 'user': user.id, 'expireAt': null }).sort({ createdAt: -1 });
                 return locations;
             } catch (err) {
                 throw new Error(err);

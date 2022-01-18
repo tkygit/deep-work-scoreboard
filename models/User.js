@@ -31,7 +31,11 @@ const userSchema = new Schema({
             type: Schema.Types.ObjectId,
             ref: 'projectmilestones'
         }
-    ]
+    ],
+    expireAt: {
+        type: Date,
+        default: null
+    }
 });
 
 // Model Methods
@@ -68,5 +72,7 @@ userSchema.statics.upsertGoogleUser = async function ({ accessToken, refreshToke
     }
     return user;
 };
+
+userSchema.index({ expireAt: 1}, {expireAfterSeconds: 0})
 
 module.exports = model ('User', userSchema);

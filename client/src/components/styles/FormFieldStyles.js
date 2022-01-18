@@ -36,6 +36,10 @@ const FormFieldStyles = styled.div`
         position: relative;
     }
 
+    .field-box-empty {
+        opacity: 80%;
+    }
+
     .number-field {
         width: 5.5rem;
     }

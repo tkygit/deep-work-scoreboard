@@ -44,13 +44,24 @@ module.exports = {
                 throw new Error("Unable to update session: " + e);
             }
         },
+        async removeUserSessions(_, {}, context) {
+            const user = checkAuth(context);
+            try {
+                const date = new Date()
+                const expireDate = date.setDate(date.getDate() + 7);
+
+                return await Session.updateMany({'user': user.id}, { $set: { expireAt: expireDate } });
+            } catch (err) {
+                throw new Error(err);
+            }
+        }
     },
     Query: {
         async getSessions(_, {}, context) {
             const user = checkAuth(context);
 
             try {
-                const sessions = await Session.find({ 'user': user.id })
+                const sessions = await Session.find({ 'user': user.id, 'expireAt': null })
                                               .sort({ createdAt: -1 })
                                               .populate('project')
                                               .populate('projectType')

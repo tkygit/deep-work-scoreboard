@@ -5,6 +5,8 @@ const theme = {
   navy: '#000333',
   blue: '#94BDFE',
   black: '#06082B',
+  grey: '#A8A8A8',
+  red: '#C30000',
   mobileWidth: '480px',
   tabletWidth: '768px',
   desktopWidth: '1024px',

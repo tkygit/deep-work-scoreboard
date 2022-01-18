@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { useQuery, useMutation } from '@apollo/client';
 import Modal from 'react-modal';
 
-import { ModalForm, ModalLabel, ModalInput, ModalButton, ModalContainer} from './styles/Modal';
+import { ModalForm, ModalButton, ModalContainer} from './styles/Modal';
+import { InputField, InputLabel } from './styles/Input';
 import FormFieldStyles from './styles/FormFieldStyles';
 import { UnderlineLink } from './styles/Link';
 import { useForm , selectDropdown } from '../util/form';
@@ -104,9 +105,12 @@ function FormField(props) {
                     name={fieldType.toLowerCase().replace(" ", "_")} 
                     onChange={props.onFieldChange}
                     defaultValue={props.defaultValue !== null ? props.defaultValue : "instruction"}
-                    className="field-box"
+                    className={items.length > 0 ? "field-box" : "field-box field-box-empty"}
                 >
+                    { items.length > 0 ?
                     <option disabled hidden value="instruction">Select {fieldType.toLowerCase()}</option>
+                    :
+                    <option disabled hidden value="instruction">Add your first {fieldType.toLowerCase()} to get started</option> }
                     {items.map((item) => (
                         <option key={item.id} value={item.id}>{item.name}</option>
                     ))}
@@ -118,8 +122,8 @@ function FormField(props) {
                     style={ModalContainer}
                 >
                     <ModalForm onSubmit={onSubmit}>
-                        <ModalLabel>Add new {fieldType.toLowerCase()}</ModalLabel>
-                        <ModalInput type="text" name="name" placeholder={fieldType} value={values.name} onChange={onChange}></ModalInput>
+                        <InputLabel>Add new {fieldType.toLowerCase()}</InputLabel>
+                        <InputField type="text" name="name" placeholder={fieldType} value={values.name} onChange={onChange}></InputField>
                         <ModalButton type="submit">Create new {fieldType.toLowerCase()}</ModalButton>
                     </ModalForm>
                 </Modal>
