@@ -108,6 +108,31 @@ module.exports = {
                 "lastLocation": location
             };
         },
+        async updateUser(_, { accountDetails: { firstName, lastName } }, context) {
+            const user = checkAuth(context);
+            const currUser = await User.findOne({ '_id': user.id });
+
+            if (currUser) {
+                try {
+                    await User.updateOne(
+                        { _id: user.id },
+                        { $set: { 
+                            "firstName" : firstName,
+                            "lastName" : lastName
+                            }
+                        }
+                    );
+                    return { 
+                        "firstName" : firstName,
+                        "lastName" : lastName
+                        };
+                } catch (e) {
+                    throw new Error("Unable to update user: " + e);
+                }
+            } else {
+                throw new Error("Unable to find user to update");
+            }
+        },
         async removeUser(_, {}, context) {
             const user = checkAuth(context);
             try {

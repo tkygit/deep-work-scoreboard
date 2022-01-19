@@ -71,6 +71,11 @@ type AcknowledgeDeletion {
     nModified: Int!
 }
 
+input AccountDetails {
+    firstName: String
+    lastName: String
+}
+
 type Query {
     getLocations: [Location]
     getProjects: [Project]
@@ -96,6 +101,7 @@ type Mutation {
     addDwTime(seconds: Int!): Int!
     updateNextMilestoneHr: Int!
     updateLastSessionDetails(project: ID!, projectType: ID!, location: ID!): SessionDetails!
+    updateUser(accountDetails: AccountDetails! ): User!
     removeUserSessions: AcknowledgeDeletion!
     removeUserProjects: AcknowledgeDeletion!
     removeUserProjectTypes: AcknowledgeDeletion!
