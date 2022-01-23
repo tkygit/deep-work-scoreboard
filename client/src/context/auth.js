@@ -28,14 +28,25 @@ function authReducer(state, action) {
     switch (action.type) {
     case 'LOGIN':
         return {
-        ...state,
-        user: action.payload
+            ...state,
+            user: action.payload.userData,
+            firstName: action.payload.firstName,
+            lastName: action.payload.lastName
         };
     case 'LOGOUT':
         return {
-        ...state,
-        user: null
+            ...state,
+            user: null,
+            firstName: null,
+            lastName: null
         };
+    case 'UPDATE':
+        return {
+            ...state,
+            user: action.payload.userData,
+            firstName: action.payload.firstName,
+            lastName: action.payload.lastName
+        }
     default:
         return state;
     }
@@ -44,11 +55,11 @@ function authReducer(state, action) {
 function AuthProvider(props) {
     const [state, dispatch] = useReducer(authReducer, initialState);
 
-    function login(userData) {
+    function login(userData, firstName, lastName) {
         localStorage.setItem('token', userData.token);
         dispatch({
             type: 'LOGIN',
-            payload: userData
+            payload: {userData: userData, firstName: firstName, lastName: lastName}
         });
     }
 
@@ -58,9 +69,16 @@ function AuthProvider(props) {
         dispatch({ type: 'LOGOUT' });
     }
 
+    function updateDetails(userData, firstName, lastName) {
+        dispatch({
+            type: 'UPDATE',
+            payload: {userData: userData, firstName: firstName, lastName: lastName}
+        });
+    }
+
     return (
     <AuthContext.Provider
-        value={{ user: state.user, login, logout }}
+        value={{ user: state.user, firstName: state.firstName, lastName: state.lastName, login, logout, updateDetails }}
         {...props}
     />
     );

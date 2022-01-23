@@ -125,3 +125,13 @@ mutation removeUserProjects {
     }
 }
 `;
+
+export const GET_ACCOUNT_DETAILS = gql ` 
+query getAccountDetails { 
+    getAccountDetails {
+        email,
+        firstName,
+        lastName
+    }
+}
+`;

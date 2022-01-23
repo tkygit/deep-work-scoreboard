@@ -1,6 +1,6 @@
+import React, { useState, useContext } from 'react';
 import gql from 'graphql-tag';
 import styled from 'styled-components'
-import React from 'react';
 import { useMutation, useQuery } from '@apollo/client';
 
 import Navbar from '../components/Navbar'
@@ -11,8 +11,11 @@ import {
     REMOVE_USER_SESSIONS,
     REMOVE_USER_LOCATIONS,
     REMOVE_USER_PROJECT_TYPES,
-    REMOVE_USER_PROJECTS
+    REMOVE_USER_PROJECTS,
+    GET_ACCOUNT_DETAILS
 } from '../util/graphql'
+import { useForm } from '../util/form'
+import { AuthContext } from '../context/auth';
 
 const AccountStyles = styled.div`
     .button {
@@ -23,7 +26,7 @@ const AccountStyles = styled.div`
     }
 
     .save-button {
-        margin-top: 3rem;
+        margin: 3rem 3rem 0 0;
     }
 
     .reset-button {
@@ -55,7 +58,10 @@ const AccountStyles = styled.div`
 
 function Account() {
 
+    const context = useContext(AuthContext);
+    const { user, firstName, lastName } = useContext(AuthContext);
     const { loading, error, data: { getAccountDetails: accountDetails } = {} } = useQuery(GET_ACCOUNT_DETAILS);
+    const [ detailsUpdated, setDetailsUpdated] = useState(false);
 
     const [removeSessions] = useMutation(REMOVE_USER_SESSIONS);
     const [removeLocation] = useMutation(REMOVE_USER_LOCATIONS);
@@ -75,23 +81,24 @@ function Account() {
         await removeUser();
     }
 
-    // const { onChange, onSubmit, values } = useForm(editItemCallback, { name: '' });
+    const { onChange, onSubmit, values } = useForm(updateUserCallback, {
+        firstName: null,
+        lastName: null
+      });
+    
+    const [updateUser] = useMutation(UPDATE_ACCOUNT_DETAILS, {
+        update(proxy, result) {
+            setDetailsUpdated(true)
+            const updatedUser = result.data.updateUser
+            proxy.writeQuery({ query: GET_ACCOUNT_DETAILS, data: { getAccountDetails: updatedUser } });
+            context.updateDetails(user, updatedUser.firstName, updatedUser.lastName);
+        },
+        variables: values
+    });
 
-    // async function editItemCallback() {
-    //     switch(fieldType) {
-    //         case "Project":
-    //             await createProject();
-    //             break;
-    //         case "Project Type":
-    //             await createProjectType();
-    //             break;
-    //         case "Location":
-    //             await createLocation();
-    //             break;
-    //         default:
-    //             break;
-    //     }
-    // };
+    function updateUserCallback() {
+        updateUser()
+    }
 
     return (
         <AccountStyles>
@@ -100,17 +107,17 @@ function Account() {
             { !loading ?
             <>
                 <h3>My account</h3>
-                <form>
-                    <AccountDetail label="Email address" value={accountDetails.email} readOnly={true}/><span className="email-disclaimer">You are using your Google account to use this app. This cannot be changed.</span>
-                    <AccountDetail label="First name" value={accountDetails.firstName} readOnly={false}/>
-                    <AccountDetail label="Last name" value={accountDetails.lastName} readOnly={false}/>
+                <form onSubmit={onSubmit}>
+                    <AccountDetail label="Email address" name="email" value={accountDetails.email} readOnly={true}/><span className="email-disclaimer">You are using your Google account to use this app. This cannot be changed.</span>
+                    <AccountDetail label="First name" name="firstName" value={values.firstName === null ? accountDetails.firstName : values.firstName } readOnly={false} onChange={onChange}/>
+                    <AccountDetail label="Last name" name="lastName" value={values.lastName === null ? accountDetails.lastName : values.lastName } readOnly={false} onChange={onChange}/>
                     <h4 className="subheading">Deep work data</h4>
                     {/* TO DO: List projects, project types and location with a delete button for each item */}
-                    <Button className="save-button button">Save my details</Button>
+                    <Button className="save-button button">Save my details</Button>{detailsUpdated && <span className="alert">Your details have been updated!</span>}
                 </form>
                 <h4 className="subheading">Danger Zone</h4>
-                <div className="button-wrapper"><Button className="reset-button button" onClick={handleResetAccount}>Reset data</Button><span className="warning">Warning! This will delete all your current deep work data.</span></div>
-                <div className="button-wrapper"><Button className="delete-button button" onClick={handleDeleteAccount}>Delete Account</Button><span className="warning">Warning! This will delete your account and any associated data.</span></div>
+                <div className="button-wrapper"><Button className="reset-button button" onClick={handleResetAccount}>Reset data</Button><span className="alert warning">Warning! This will delete all your current deep work data.</span></div>
+                <div className="button-wrapper"><Button className="delete-button button" onClick={handleDeleteAccount}>Delete Account</Button><span className="alert warning">Warning! This will delete your account and any associated data.</span></div>
             </>
             :
             <>
@@ -130,11 +137,11 @@ const REMOVE_USER = gql `
     }
 `;
 
-const GET_ACCOUNT_DETAILS = gql ` 
-    query getAccountDetails { 
-        getAccountDetails {
-            email,
-            firstName,
+const UPDATE_ACCOUNT_DETAILS = gql ` 
+    mutation updateUser($firstName: String!, $lastName: String!) {
+        updateUser(accountDetails: { firstName: $firstName,  lastName: $lastName }) {
+            email
+            firstName
             lastName
         }
     }

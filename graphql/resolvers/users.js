@@ -122,10 +122,11 @@ module.exports = {
                             }
                         }
                     );
-                    return { 
+                    return {
+                        "email": currUser.email,
                         "firstName" : firstName,
                         "lastName" : lastName
-                        };
+                    };
                 } catch (e) {
                     throw new Error("Unable to update user: " + e);
                 }

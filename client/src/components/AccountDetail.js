@@ -27,9 +27,9 @@ function AccountDetail(props) {
         <AccountDetailStyles ReadOnly={props.readOnly}>
             <InputLabel>{props.label}</InputLabel>
             { props.readOnly === true ?
-                <InputField className="account-input read-only" type="text" name="name" value={props.value} readonly/>
+                <InputField className="account-input read-only" type="text" name={props.name} value={props.value} readOnly/>
                 :
-                <InputField className="account-input" type="text" name="name" value={props.value}/>
+                <InputField className="account-input" type="text" name={props.name} value={props.value} onChange={props.onChange}/>
             }
         </AccountDetailStyles>
     );
