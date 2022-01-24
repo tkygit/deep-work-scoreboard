@@ -2,7 +2,9 @@ import React, { useReducer, createContext } from 'react';
 import jwtDecode from 'jwt-decode';
 
 const initialState = {
-    user: null
+    user: null,
+    firstName: null,
+    lastName: null
 };
 
 if (localStorage.getItem('token')) {
@@ -15,6 +17,8 @@ if (localStorage.getItem('token')) {
         // update token in localStorage with new expiry time
     } else {
         initialState.user = decodedToken;
+        initialState.firstName = localStorage.firstName;
+        initialState.lastName = localStorage.lastName;
     }
 }
 
@@ -57,6 +61,8 @@ function AuthProvider(props) {
 
     function login(userData, firstName, lastName) {
         localStorage.setItem('token', userData.token);
+        localStorage.setItem('firstName', firstName);
+        localStorage.setItem('lastName', lastName);
         dispatch({
             type: 'LOGIN',
             payload: {userData: userData, firstName: firstName, lastName: lastName}
@@ -70,6 +76,8 @@ function AuthProvider(props) {
     }
 
     function updateDetails(userData, firstName, lastName) {
+        localStorage.setItem('firstName', firstName);
+        localStorage.setItem('lastName', lastName);
         dispatch({
             type: 'UPDATE',
             payload: {userData: userData, firstName: firstName, lastName: lastName}

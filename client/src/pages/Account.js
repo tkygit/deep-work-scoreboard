@@ -6,6 +6,7 @@ import { useMutation, useQuery } from '@apollo/client';
 import Navbar from '../components/Navbar'
 import Button from '../components/styles/Button';
 import AccountDetail from '../components/AccountDetail';
+import ManageDeepWorkData from '../components/ManageDeepWorkData';
 import BodyContainer from '../components/styles/BodyContainer'
 import {
     REMOVE_USER_SESSIONS,
@@ -63,6 +64,8 @@ function Account() {
     const { loading, error, data: { getAccountDetails: accountDetails } = {} } = useQuery(GET_ACCOUNT_DETAILS);
     const [ detailsUpdated, setDetailsUpdated] = useState(false);
 
+
+
     const [removeSessions] = useMutation(REMOVE_USER_SESSIONS);
     const [removeLocation] = useMutation(REMOVE_USER_LOCATIONS);
     const [removeProjectTypes] = useMutation(REMOVE_USER_PROJECT_TYPES);
@@ -111,9 +114,8 @@ function Account() {
                     <AccountDetail label="Email address" name="email" value={accountDetails.email} readOnly={true}/><span className="email-disclaimer">You are using your Google account to use this app. This cannot be changed.</span>
                     <AccountDetail label="First name" name="firstName" value={values.firstName === null ? accountDetails.firstName : values.firstName } readOnly={false} onChange={onChange}/>
                     <AccountDetail label="Last name" name="lastName" value={values.lastName === null ? accountDetails.lastName : values.lastName } readOnly={false} onChange={onChange}/>
-                    <h4 className="subheading">Deep work data</h4>
-                    {/* TO DO: List projects, project types and location with a delete button for each item */}
                     <Button className="save-button button">Save my details</Button>{detailsUpdated && <span className="alert">Your details have been updated!</span>}
+                    <ManageDeepWorkData/>
                 </form>
                 <h4 className="subheading">Danger Zone</h4>
                 <div className="button-wrapper"><Button className="reset-button button" onClick={handleResetAccount}>Reset data</Button><span className="alert warning">Warning! This will delete all your current deep work data.</span></div>
