@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useQuery, useMutation } from '@apollo/client';
 import Modal from 'react-modal';
 
@@ -15,12 +15,14 @@ import {
     CREATE_PROJECT_TYPE_MUTATION,
     CREATE_LOCATION_MUTATION
 } from '../util/graphql'
+import { useModal } from '../util/modal';
 
 function FormField(props) {
 
     const fieldType = props.type;
     var items;
-    const [modalIsOpen, setIsOpen] = useState(false);
+    
+    const { modalIsOpen, openModal, closeModal } = useModal();
 
     const { data: { getProjects: projects } = {} } = useQuery(GET_PROJECTS_QUERY, {skip: fieldType !== "Project"});
     if (projects !== undefined) items = projects;
@@ -28,9 +30,6 @@ function FormField(props) {
     if (projectTypes !== undefined) items = projectTypes;
     const { data: { getLocations: locations } = {} } = useQuery(GET_LOCATIONS_QUERY, {skip: fieldType !== "Location"});
     if (locations !== undefined) items = locations;
-
-    const openModal = () => { setIsOpen(true) };
-    const closeModal = () => { setIsOpen(false) };
 
     const { onChange, onSubmit, values } = useForm(addItemCallback, { name: '' });
 
@@ -124,7 +123,7 @@ function FormField(props) {
                     <ModalForm onSubmit={onSubmit}>
                         <InputLabel>Add new {fieldType.toLowerCase()}</InputLabel>
                         <InputField type="text" name="name" placeholder={fieldType} value={values.name} onChange={onChange}></InputField>
-                        <ModalButton type="submit">Create new {fieldType.toLowerCase()}</ModalButton>
+                        <ModalButton type="submit" className="inline">Create new {fieldType.toLowerCase()}</ModalButton>
                     </ModalForm>
                 </Modal>
             </>

@@ -28,6 +28,38 @@ module.exports = {
                 return foundProjectType;
             }
         },
+        async updateProjectTypeName(_, { projectType, name }, context) {
+            checkAuth(context);
+
+            const foundProjectType = await ProjectType.findOne({ '_id': projectType });
+
+            if (foundProjectType) {
+                try {
+                    await ProjectType.updateOne(
+                        { _id: projectType },
+                        { $set: {"name" : name} }
+                    );
+                    console.log("updated " + name)
+    
+                    return name;
+                } catch (e) {
+                    throw new Error("Unable to update project type: " + e);
+                }
+            } else {
+                throw new Error("Unable to find project type to update");
+            }
+        },
+        async removeProjectType(_, { projectType }, context) {
+            const user = checkAuth(context);
+            try {
+                const date = new Date()
+                const expireDate = date.setDate(date.getDate() + 7);
+
+                return await ProjectType.updateMany({'user': user.id, 'id_': projectType}, { $set: { expireAt: expireDate } });
+            } catch (err) {
+                throw new Error(err);
+            }
+        },
         async removeUserProjectTypes(_, {}, context) {
             const user = checkAuth(context);
             try {

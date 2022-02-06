@@ -107,7 +107,7 @@ function Account() {
         <AccountStyles>
             <Navbar/>
             <BodyContainer>
-            { !loading ?
+            { accountDetails !== undefined ?
             <>
                 <h3>My account</h3>
                 <form onSubmit={onSubmit}>

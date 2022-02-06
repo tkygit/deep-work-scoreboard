@@ -78,7 +78,7 @@ input AccountDetails {
 
 type Query {
     getLocations: [Location]
-    getProjects: [Project]
+    getProjects(order: String): [Project]
     getProjectTypes: [ProjectType]
     getSessions: [Session]
     getLocation(id: ID!): Location
@@ -101,7 +101,13 @@ type Mutation {
     addDwTime(seconds: Int!): Int!
     updateNextMilestoneHr: Int!
     updateLastSessionDetails(project: ID!, projectType: ID!, location: ID!): SessionDetails!
+    updateLocationName(location: ID!, name: String!): String!
+    updateProjectName(project: ID!, name: String!): String!
+    updateProjectTypeName(projectType: ID!, name: String!): String!
     updateUser(accountDetails: AccountDetails! ): User!
+    removeLocation: AcknowledgeDeletion!
+    removeProject: AcknowledgeDeletion!
+    removeProjectType: AcknowledgeDeletion!
     removeUserSessions: AcknowledgeDeletion!
     removeUserProjects: AcknowledgeDeletion!
     removeUserProjectTypes: AcknowledgeDeletion!

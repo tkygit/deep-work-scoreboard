@@ -49,6 +49,37 @@ module.exports = {
                 throw new Error("Unable to find project to update");
             }
         },
+        async updateProjectName(_, { project, name }, context) {
+            checkAuth(context);
+
+            const foundProject = await Project.findOne({ '_id': project });
+
+            if (foundProject) {
+                try {
+                    await Project.updateOne(
+                        { _id: project },
+                        { $set: {"name" : name} }
+                    );
+    
+                    return name;
+                } catch (e) {
+                    throw new Error("Unable to update project: " + e);
+                }
+            } else {
+                throw new Error("Unable to find project to update");
+            }
+        },
+        async removeProject(_, { project }, context) {
+            const user = checkAuth(context);
+            try {
+                const date = new Date()
+                const expireDate = date.setDate(date.getDate() + 7);
+
+                return await Project.updateMany({'user': user.id, 'id_': project}, { $set: { expireAt: expireDate } });
+            } catch (err) {
+                throw new Error(err);
+            }
+        },
         async removeUserProjects(_, {}, context) {
             const user = checkAuth(context);
             try {

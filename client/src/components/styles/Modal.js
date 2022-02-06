@@ -7,16 +7,19 @@ export const ModalForm = styled.form`
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
-    `;
+`;
 
 export const ModalButton = styled.button`
     justify-content: center;
     background-color: ${props => props.theme.blue};
     border: none;
     color: white;
-    padding: 0 1rem;
+    padding: 1rem;
     font-size: 1.4rem;
-    flex: 2;
+
+    .inline {
+        flex: 2;
+    }
 `;
 
 export const ModalContainer = {
