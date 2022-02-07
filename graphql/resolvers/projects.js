@@ -75,7 +75,7 @@ module.exports = {
                 const date = new Date()
                 const expireDate = date.setDate(date.getDate() + 7);
 
-                return await Project.updateMany({'user': user.id, 'id_': project}, { $set: { expireAt: expireDate } });
+                return await Project.updateMany({'user': user.id, '_id': project}, { $set: { expireAt: expireDate } });
             } catch (err) {
                 throw new Error(err);
             }

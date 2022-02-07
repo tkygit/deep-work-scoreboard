@@ -67,14 +67,14 @@ function Account() {
 
 
     const [removeSessions] = useMutation(REMOVE_USER_SESSIONS);
-    const [removeLocation] = useMutation(REMOVE_USER_LOCATIONS);
+    const [removeLocations] = useMutation(REMOVE_USER_LOCATIONS);
     const [removeProjectTypes] = useMutation(REMOVE_USER_PROJECT_TYPES);
     const [removeProjects] = useMutation(REMOVE_USER_PROJECTS);
     const [removeUser] = useMutation(REMOVE_USER);
 
     const handleResetAccount = async () => {
         await removeSessions();
-        await removeLocation();
+        await removeLocations();
         await removeProjectTypes();
         await removeProjects();
     }
@@ -115,8 +115,8 @@ function Account() {
                     <AccountDetail label="First name" name="firstName" value={values.firstName === null ? accountDetails.firstName : values.firstName } readOnly={false} onChange={onChange}/>
                     <AccountDetail label="Last name" name="lastName" value={values.lastName === null ? accountDetails.lastName : values.lastName } readOnly={false} onChange={onChange}/>
                     <Button className="save-button button">Save my details</Button>{detailsUpdated && <span className="alert">Your details have been updated!</span>}
-                    <ManageDeepWorkData/>
                 </form>
+                <ManageDeepWorkData/>
                 <h4 className="subheading">Danger Zone</h4>
                 <div className="button-wrapper"><Button className="reset-button button" onClick={handleResetAccount}>Reset data</Button><span className="alert warning">Warning! This will delete all your current deep work data.</span></div>
                 <div className="button-wrapper"><Button className="delete-button button" onClick={handleDeleteAccount}>Delete Account</Button><span className="alert warning">Warning! This will delete your account and any associated data.</span></div>

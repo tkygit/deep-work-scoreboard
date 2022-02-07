@@ -15,15 +15,15 @@ import { useModal } from '../util/modal';
 import { useForm } from '../util/form';
 
 const ListDataStyles = styled.div`
-    margin-top: 2rem;
     width: 30%;
 
-    .item {
-        display: block;
+    .name {
+        flex-grow: 1;
     }
 
-    .action {
-        float: right;
+    .item {
+        display: flex;
+        margin: 2rem 0;
     }
 `;
 
@@ -85,6 +85,7 @@ function ManageDeepWorkData(props) {
             name: values.name
         }
     });
+
     const [updateProjectTypeName] = useMutation(UPDATE_PROJECT_TYPE_NAME, {
         update(proxy, result) {
             const data = proxy.readQuery({
@@ -108,6 +109,7 @@ function ManageDeepWorkData(props) {
             name: values.name
         }
     });
+
     const [updateLocationName] = useMutation(UPDATE_LOCATION_NAME, {
         update(proxy, result) {
             const data = proxy.readQuery({
@@ -129,6 +131,54 @@ function ManageDeepWorkData(props) {
         variables: {
             id: fieldIdToEdit,
             name: values.name
+        }
+    });
+
+    const [removeProject] = useMutation(REMOVE_PROJECT, {
+        update(proxy, _) {
+            const data = proxy.readQuery({
+                query: GET_PROJECTS_QUERY
+            });
+            const projects = [...data.getProjects].filter(function(value, _){ 
+                return value.id !== fieldIdToEdit;
+            });
+            proxy.writeQuery({ query: GET_PROJECTS_QUERY, data: { getProjects: projects }});
+            setCurrData(projects);
+        },
+        variables: {
+            id: fieldIdToEdit
+        }
+    });
+
+    const [removeProjectType] = useMutation(REMOVE_PROJECT_TYPE, {
+        update(proxy, _) {
+            const data = proxy.readQuery({
+                query: GET_PROJECT_TYPES_QUERY
+            });
+            const projectTypes = [...data.getProjectTypes].filter(function(value, _){ 
+                return value.id !== fieldIdToEdit;
+            });
+            proxy.writeQuery({ query: GET_PROJECT_TYPES_QUERY, data: { getProjectTypes: projectTypes }});
+            setCurrData(projectTypes);
+        },
+        variables: {
+            id: fieldIdToEdit
+        }
+    });
+
+    const [removeLocation] = useMutation(REMOVE_LOCATION, {
+        update(proxy, _) {
+            const data = proxy.readQuery({
+                query: GET_LOCATIONS_QUERY
+            });
+            const locations = [...data.getLocations].filter(function(value, _){ 
+                return value.id !== fieldIdToEdit;
+            });
+            proxy.writeQuery({ query: GET_LOCATIONS_QUERY, data: { getLocations: locations }});
+            setCurrData(locations);
+        },
+        variables: {
+            id: fieldIdToEdit
         }
     });
 
@@ -173,8 +223,22 @@ function ManageDeepWorkData(props) {
         closeModal();
     };
 
-    const onConfirmation = () => {
-        console.log("TO DO: delete the item")
+    const onConfirmation = async (e) => {
+        e.preventDefault();
+        switch(currSelected) {
+            case "project":
+                await removeProject();
+                break;
+            case "project type":
+                await removeProjectType();
+                break;
+            case "location":
+                await removeLocation();
+                break;
+            default:
+                break;
+        }
+        closeModal();
     }
 
     return (
@@ -194,18 +258,21 @@ function ManageDeepWorkData(props) {
             </select>
             <ListDataStyles>
                 { (currData !== undefined) ?
-                    currData.map((data) => (
-                        !data.name.includes("Default") &&
-                            <div className="item" key={data.id}>
-                                <p>{data.name}</p>
-                                <div className="action">
-                                    <UnderlineLink onClick={() => handleOpenModal(data, true)}>Edit</UnderlineLink>
-                                    <UnderlineLink onClick={() => handleOpenModal(data, false)}>Delete</UnderlineLink>
+                    (currData.length > 1) ? 
+                        currData.map((data) => (
+                            !data.name.includes("Default") &&
+                                <div className="item" key={data.id}>
+                                    <p className="name">{data.name}</p>
+                                    <div className="action">
+                                        <UnderlineLink onClick={() => handleOpenModal(data, true)}>Edit</UnderlineLink>
+                                        <UnderlineLink onClick={() => handleOpenModal(data, false)}>Delete</UnderlineLink>
+                                    </div>
                                 </div>
-                            </div>
-                    ))
+                        ))
+                    :
+                    <div className="item">No custom {currSelected}s to show</div>
                 : 
-                <div>Loading...</div>
+                <div className="item">Loading...</div>
             }
             <Modal
                 isOpen={modalIsOpen}
@@ -222,7 +289,7 @@ function ManageDeepWorkData(props) {
                 <ModalForm onSubmit={onConfirmation}>
                     <FormLabel>Are you sure you want to delete this item?</FormLabel>
                     <ModalButton type="submit">Confirm</ModalButton>
-                    <CancelLink><p className="text">Cancel</p></CancelLink>
+                    <CancelLink><p className="text" onClick={closeModal}>Cancel</p></CancelLink>
                 </ModalForm>
                 }
             </Modal>
@@ -233,7 +300,9 @@ function ManageDeepWorkData(props) {
 
 const UPDATE_PROJECT_NAME = gql ` mutation updateProjectName ($id: ID!, $name: String!) { updateProjectName(project: $id, name: $name) }`;
 const UPDATE_PROJECT_TYPE_NAME = gql ` mutation updateProjectTypeName ($id: ID!, $name: String!) { updateProjectTypeName(projectType: $id, name: $name) }`;
-
 const UPDATE_LOCATION_NAME = gql ` mutation updateLocationName ($id: ID!, $name: String!) { updateLocationName(location: $id, name: $name) }`;
+const REMOVE_PROJECT = gql ` mutation removeProject ($id: ID!) { removeProject(project: $id) { ok } }`;
+const REMOVE_PROJECT_TYPE = gql ` mutation removeProjectType ($id: ID!) { removeProjectType(projectType: $id) { ok } }`;
+const REMOVE_LOCATION = gql ` mutation removeLocation ($id: ID!) { removeLocation(location: $id) { ok } }`;
 
 export default ManageDeepWorkData;
